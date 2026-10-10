@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  *
- * @author Mateo
+ * @author Mateo Sosa
  */
 public class LongitudModel implements DataConverter {
   // private final double kilometer = 1000;
@@ -37,7 +37,7 @@ public class LongitudModel implements DataConverter {
      // data.put("mm", this.millimeter);
      data.put("ft", this.feet);
      data.put("yd", this.yard);
-     data.put("mile", this.mile);
+     data.put("mi", this.mile);
      
      return data;
   }
