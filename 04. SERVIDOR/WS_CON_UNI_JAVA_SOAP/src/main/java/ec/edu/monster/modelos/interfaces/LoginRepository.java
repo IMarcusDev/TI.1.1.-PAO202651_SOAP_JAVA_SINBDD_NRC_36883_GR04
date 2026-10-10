@@ -9,5 +9,5 @@ package ec.edu.monster.modelos.interfaces;
  * @author Mateo Sosa
  */
 public interface LoginRepository {
-  public abstract String login(String username, String password);
+  public abstract String validateCredentials(String username, String password) throws Exception;
 }
