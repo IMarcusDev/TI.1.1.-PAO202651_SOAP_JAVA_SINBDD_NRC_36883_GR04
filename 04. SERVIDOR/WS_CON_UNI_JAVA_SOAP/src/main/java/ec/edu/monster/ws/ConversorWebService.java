@@ -9,6 +9,7 @@ import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
 
 import ec.edu.monster.controlador.ConverterController;
+import ec.edu.monster.controlador.LoginController;
 
 /**
  *
@@ -18,11 +19,15 @@ import ec.edu.monster.controlador.ConverterController;
 public class ConversorWebService {
   @WebMethod(operationName = "convert")
   public String convert(
+    @WebParam(name = "token") String token,
     @WebParam(name = "type") String type,
     @WebParam(name = "value") double value,
     @WebParam(name = "from") String from,
     @WebParam(name = "to") String to
   ) {
+    if (!LoginController.validateUser(token))
+      return "Invalid Token";
+    
     return ConverterController.convert(type, value, from, to);
   }
 }

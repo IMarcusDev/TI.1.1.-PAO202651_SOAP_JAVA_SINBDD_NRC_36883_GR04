@@ -6,6 +6,7 @@ package ec.edu.monster.controlador;
 
 import ec.edu.monster.modelos.interfaces.LoginRepository;
 import ec.edu.monster.modelos.repositorios.LoginImplRepository;
+import ec.edu.monster.servicios.TokenService;
 
 /**
  *
@@ -20,5 +21,9 @@ public class LoginController {
     } catch (Exception e) {
       return e.getMessage();
     }
+  }
+  
+  public static boolean validateUser(String token) {
+    return TokenService.validateToken(token);
   }
 }
