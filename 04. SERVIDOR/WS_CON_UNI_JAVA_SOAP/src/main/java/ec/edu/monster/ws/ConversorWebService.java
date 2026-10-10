@@ -10,6 +10,8 @@ import jakarta.jws.WebParam;
 
 import ec.edu.monster.controlador.ConverterController;
 import ec.edu.monster.controlador.LoginController;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  *
@@ -29,5 +31,20 @@ public class ConversorWebService {
       return "Invalid Token";
     
     return ConverterController.convert(type, value, from, to);
+  }
+  
+  @WebMethod(operationName = "catalog")
+  public Set<String> getCatalog(
+    @WebParam(name = "token") String token,
+    @WebParam(name = "type") String type
+  ) {
+    if (!LoginController.validateUser(token))
+      return Collections.emptySet();
+    
+    try {
+      return ConverterController.getConverter(type).getUnits();
+    } catch (Exception e) {
+      return Collections.emptySet();
+    }
   }
 }

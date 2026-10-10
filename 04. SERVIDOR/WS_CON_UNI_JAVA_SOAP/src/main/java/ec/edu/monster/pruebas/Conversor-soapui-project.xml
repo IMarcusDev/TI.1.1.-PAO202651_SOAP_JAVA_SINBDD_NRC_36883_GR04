@@ -13,15 +13,34 @@
   <message name="convertResponse">
     <part name="parameters" element="tns:convertResponse"/>
   </message>
+  <message name="catalog">
+    <part name="parameters" element="tns:catalog"/>
+  </message>
+  <message name="catalogResponse">
+    <part name="parameters" element="tns:catalogResponse"/>
+  </message>
   <portType name="ConversorWebService">
     <operation name="convert">
       <input wsam:Action="http://ws.monster.edu.ec/ConversorWebService/convertRequest" message="tns:convert"/>
       <output wsam:Action="http://ws.monster.edu.ec/ConversorWebService/convertResponse" message="tns:convertResponse"/>
     </operation>
+    <operation name="catalog">
+      <input wsam:Action="http://ws.monster.edu.ec/ConversorWebService/catalogRequest" message="tns:catalog"/>
+      <output wsam:Action="http://ws.monster.edu.ec/ConversorWebService/catalogResponse" message="tns:catalogResponse"/>
+    </operation>
   </portType>
   <binding name="ConversorWebServicePortBinding" type="tns:ConversorWebService">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
     <operation name="convert">
+      <soap:operation soapAction=""/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="catalog">
       <soap:operation soapAction=""/>
       <input>
         <soap:body use="literal"/>
@@ -38,8 +57,21 @@
   </service>
 </definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://localhost:8080/WS_CON_UNI_JAVA_SOAP/ConversorWebService?xsd=1</con:url><con:content><![CDATA[<!--Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.4.payara-p1 (FISH-10142-Metro-4.0.4-fa01c0b; 2025-07-11T17:44:37+0100) XMLWS-Impl/4.0.3 XMLWS-API/4.0.2 XMLB-Impl/4.0.5 XMLB-API/4.0.2 git-revision#fa01c0b.-->
 <xs:schema version="1.0" targetNamespace="http://ws.monster.edu.ec/" xmlns:tns="http://ws.monster.edu.ec/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="catalog" type="tns:catalog"/>
+  <xs:element name="catalogResponse" type="tns:catalogResponse"/>
   <xs:element name="convert" type="tns:convert"/>
   <xs:element name="convertResponse" type="tns:convertResponse"/>
+  <xs:complexType name="catalog">
+    <xs:sequence>
+      <xs:element name="token" type="xs:string" minOccurs="0"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="catalogResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="convert">
     <xs:sequence>
       <xs:element name="token" type="xs:string" minOccurs="0"/>
@@ -138,7 +170,17 @@
          <to>gal</to>\r
       </ws:convert>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.monster.edu.ec/ConversorWebService/convertRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="08c2ba62-0ac5-4e0d-898d-31811f283494" wsaVersion="NONE" name="LoginWebServicePortBinding" type="wsdl" bindingName="{http://ws.monster.edu.ec/}LoginWebServicePortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/WS_CON_UNI_JAVA_SOAP/LoginWebService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/WS_CON_UNI_JAVA_SOAP/LoginWebService?wsdl"><con:part><con:url>http://localhost:8080/WS_CON_UNI_JAVA_SOAP/LoginWebService?wsdl</con:url><con:content><![CDATA[<!--Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.4.payara-p1 (FISH-10142-Metro-4.0.4-fa01c0b; 2025-07-11T17:44:37+0100) XMLWS-Impl/4.0.3 XMLWS-API/4.0.2 XMLB-Impl/4.0.5 XMLB-API/4.0.2 git-revision#fa01c0b.-->
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.monster.edu.ec/ConversorWebService/convertRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="efa373ff-67f6-418f-bf8e-1782c5071513" isOneWay="false" action="" name="catalog" bindingOperationName="catalog" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a2080757-9686-421a-b8ff-7fe472093ead" name="getCatalog"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/WS_CON_UNI_JAVA_SOAP/ConversorWebService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.monster.edu.ec/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <ws:catalog>\r
+         <!--Optional:-->\r
+         <token>0a381d72-1e5d-4d35-a7d4-30cbdcaca0ed</token>\r
+         <!--Optional:-->\r
+         <type>Volumen</type>\r
+      </ws:catalog>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://ws.monster.edu.ec/ConversorWebService/catalogRequest"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="08c2ba62-0ac5-4e0d-898d-31811f283494" wsaVersion="NONE" name="LoginWebServicePortBinding" type="wsdl" bindingName="{http://ws.monster.edu.ec/}LoginWebServicePortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/WS_CON_UNI_JAVA_SOAP/LoginWebService?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/WS_CON_UNI_JAVA_SOAP/LoginWebService?wsdl"><con:part><con:url>http://localhost:8080/WS_CON_UNI_JAVA_SOAP/LoginWebService?wsdl</con:url><con:content><![CDATA[<!--Published by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.4.payara-p1 (FISH-10142-Metro-4.0.4-fa01c0b; 2025-07-11T17:44:37+0100) XMLWS-Impl/4.0.3 XMLWS-API/4.0.2 XMLB-Impl/4.0.5 XMLB-API/4.0.2 git-revision#fa01c0b.-->
 <!--Generated by XML-WS Runtime (https://github.com/eclipse-ee4j/metro-jax-ws). Runtime's version is Eclipse Metro/4.0.4.payara-p1 (FISH-10142-Metro-4.0.4-fa01c0b; 2025-07-11T17:44:37+0100) XMLWS-Impl/4.0.3 XMLWS-API/4.0.2 XMLB-Impl/4.0.5 XMLB-API/4.0.2 git-revision#fa01c0b.-->
 <definitions targetNamespace="http://ws.monster.edu.ec/" name="LoginWebService" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ws.monster.edu.ec/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>

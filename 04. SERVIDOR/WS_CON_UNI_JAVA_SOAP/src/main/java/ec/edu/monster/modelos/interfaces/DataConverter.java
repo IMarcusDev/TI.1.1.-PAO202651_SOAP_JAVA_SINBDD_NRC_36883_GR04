@@ -5,6 +5,7 @@
 package ec.edu.monster.modelos.interfaces;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -23,5 +24,9 @@ public interface DataConverter {
     double valueTo = map.get(to);
 
     return value * valueFrom / valueTo;
+  }
+  
+  default Set<String> getUnits() {
+    return this.toMap().keySet();
   }
 }
