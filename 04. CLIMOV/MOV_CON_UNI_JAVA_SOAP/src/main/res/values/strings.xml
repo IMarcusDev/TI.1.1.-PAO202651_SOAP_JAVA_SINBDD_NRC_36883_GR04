@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Conversor de Unidades</string>
+
+    <string name="login_titulo">Iniciar sesión</string>
+    <string name="login_usuario">Usuario</string>
+    <string name="login_clave">Contraseña</string>
+    <string name="login_ingresar">Ingresar</string>
+    <string name="error_campos_vacios">Ingrese usuario y contraseña</string>
+    <string name="conv_titulo">Conversor de unidades</string>
+    <string name="conv_magnitud">Magnitud</string>
+    <string name="conv_desde">Desde</string>
+    <string name="conv_hacia">Hacia</string>
+    <string name="conv_valor">Valor a convertir</string>
+    <string name="conv_convertir">Convertir</string>
+    <string name="conv_cerrar_sesion">Cerrar sesión</string>
+    <string name="conv_resultado">%1$s %2$s = %3$s %4$s</string>
+    <string name="error_valor_invalido">Ingrese un valor numérico válido</string>
+</resources>
