@@ -10,8 +10,10 @@ import jakarta.jws.WebParam;
 
 import ec.edu.monster.controlador.ConverterController;
 import ec.edu.monster.controlador.LoginController;
+import ec.edu.monster.modelos.dto.CatalogDTO;
+import ec.edu.monster.modelos.dto.ConverterDTO;
+import ec.edu.monster.modelos.enums.EstadosEnum;
 import java.util.Collections;
-import java.util.Set;
 
 /**
  *
@@ -20,7 +22,7 @@ import java.util.Set;
 @WebService(serviceName = "ConversorWebService")
 public class ConversorWebService {
   @WebMethod(operationName = "convert")
-  public String convert(
+  public ConverterDTO convert(
     @WebParam(name = "token") String token,
     @WebParam(name = "type") String type,
     @WebParam(name = "value") double value,
@@ -28,23 +30,39 @@ public class ConversorWebService {
     @WebParam(name = "to") String to
   ) {
     if (!LoginController.validateUser(token))
-      return "Invalid Token";
+      return new ConverterDTO(EstadosEnum.ERROR, "Invalid Token", 0);
     
-    return ConverterController.convert(type, value, from, to);
+    return new ConverterDTO(
+      EstadosEnum.OK,
+      "Conversión Exitosa",
+      ConverterController.convert(type, value, from, to)
+    );
   }
   
   @WebMethod(operationName = "catalog")
-  public Set<String> getCatalog(
+  public CatalogDTO getCatalog(
     @WebParam(name = "token") String token,
     @WebParam(name = "type") String type
   ) {
     if (!LoginController.validateUser(token))
-      return Collections.emptySet();
+      return new CatalogDTO(
+        EstadosEnum.ERROR,
+        "Token Inválido",
+        Collections.emptySet()
+      );
     
     try {
-      return ConverterController.getConverter(type).getUnits();
+      return new CatalogDTO(
+        EstadosEnum.OK,
+        "Obtención de Catálogo Exitosa",
+        ConverterController.getConverter(type).getUnits()
+      );
     } catch (Exception e) {
-      return Collections.emptySet();
+      return new CatalogDTO(
+        EstadosEnum.ERROR,
+        "Tipo de Catálogo Inexistente",
+        Collections.emptySet()
+      );
     }
   }
 }
