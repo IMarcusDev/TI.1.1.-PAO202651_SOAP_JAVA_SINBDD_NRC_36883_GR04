@@ -13,14 +13,10 @@ import ec.edu.monster.servicios.TokenService;
  * @author Mateo Sosa
  */
 public class LoginController {
-  public static String login(String username, String password) {
-    try {
-      LoginRepository repository = new LoginImplRepository();
-      
-      return repository.validateCredentials(username, password);
-    } catch (Exception e) {
-      return e.getMessage();
-    }
+  public static String login(String username, String password) throws Exception {
+    LoginRepository repository = new LoginImplRepository();
+    
+    return repository.validateCredentials(username, password);
   }
   
   public static boolean validateUser(String token) {
