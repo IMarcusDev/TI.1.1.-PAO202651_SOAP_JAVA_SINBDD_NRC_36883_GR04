@@ -5,6 +5,8 @@
 package ec.edu.monster.ws;
 
 import ec.edu.monster.controlador.LoginController;
+import ec.edu.monster.modelos.dto.LoginDTO;
+import ec.edu.monster.modelos.enums.EstadosEnum;
 import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 import jakarta.jws.WebParam;
@@ -16,10 +18,24 @@ import jakarta.jws.WebParam;
 @WebService(serviceName = "LoginWebService")
 public class LoginWebService {
   @WebMethod(operationName = "login")
-  public String login(
+  public LoginDTO login(
     @WebParam(name = "username") String username,
     @WebParam(name = "password") String password
   ) {
-    return LoginController.login(username, password);
+    try {
+      String token = LoginController.login(username, password);
+      
+      return new LoginDTO(
+        EstadosEnum.OK,
+        "Ingreso de Sesión Exitoso!",
+        token
+      );
+    } catch (Exception e) {
+      return new LoginDTO(
+        EstadosEnum.ERROR,
+        "Credenciales Incorrectas",
+        ""
+      );
+    }
   }
 }
