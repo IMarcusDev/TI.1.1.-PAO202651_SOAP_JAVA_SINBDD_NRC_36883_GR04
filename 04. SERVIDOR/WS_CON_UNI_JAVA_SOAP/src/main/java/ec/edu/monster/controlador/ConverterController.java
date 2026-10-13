@@ -36,13 +36,9 @@ public class ConverterController {
     }
   }
   
-  public static double convert(String type, double value, String from, String to) {
-    try {
-      DataConverter converter = ConverterController.getConverter(type);
-      
-      return converter.convert(value, from, to);
-    } catch (Exception e) {
-      return 0;
-    }
+  public static double convert(String type, double value, String from, String to) throws Exception {
+    DataConverter converter = ConverterController.getConverter(type);
+
+    return converter.convert(value, from, to);
   }
 }

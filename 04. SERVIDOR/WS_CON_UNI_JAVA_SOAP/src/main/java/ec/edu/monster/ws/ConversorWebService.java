@@ -30,13 +30,22 @@ public class ConversorWebService {
     @WebParam(name = "to") String to
   ) {
     if (!LoginController.validateUser(token))
-      return new ConverterDTO(EstadosEnum.ERROR, "Invalid Token", 0);
+      return new ConverterDTO(EstadosEnum.ERROR, "Token Inválido", 0);
     
-    return new ConverterDTO(
-      EstadosEnum.OK,
-      "Conversión Exitosa",
-      ConverterController.convert(type, value, from, to)
-    );
+    try {
+      return new ConverterDTO(
+        EstadosEnum.OK,
+        "Conversión Exitosa",
+        ConverterController.convert(type, value, from, to)
+      );
+    } catch (Exception e) {
+      return new ConverterDTO(
+        EstadosEnum.ERROR,
+        "No se pudo hacer la conversión",
+        0
+      );
+    }
+
   }
   
   @WebMethod(operationName = "catalog")
