@@ -19,7 +19,6 @@ public class ConvertidorSoapClienteTest {
     private static final String URL = "http://servidor/ConversorWebService";
     private static final String TOKEN = "token-de-prueba";
 
-    /** Transporte que no usa la red: guarda la petición y devuelve una respuesta fija. */
     private static class TransporteFalso extends SoapTransporte {
         private final String respuesta;
         String urlRecibida;

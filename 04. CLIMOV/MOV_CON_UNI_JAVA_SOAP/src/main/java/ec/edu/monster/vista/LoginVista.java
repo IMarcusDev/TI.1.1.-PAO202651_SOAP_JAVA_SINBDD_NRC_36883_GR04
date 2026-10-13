@@ -2,6 +2,7 @@ package ec.edu.monster.vista;
 
 import android.app.Activity;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -22,6 +23,7 @@ public class LoginVista {
         btnIngresar = actividad.findViewById(R.id.btnIngresar);
         prgCargando = actividad.findViewById(R.id.prgCargando);
         lblError = actividad.findViewById(R.id.lblError);
+        AjusteBordes.aplicar(actividad);
     }
 
     public String getUsuario() {
@@ -34,6 +36,13 @@ public class LoginVista {
 
     public void alPresionarIngresar(Runnable accion) {
         btnIngresar.setOnClickListener(v -> accion.run());
+        txtClave.setOnEditorActionListener((v, idAccion, evento) -> {
+            if (idAccion == EditorInfo.IME_ACTION_GO && btnIngresar.isEnabled()) {
+                accion.run();
+                return true;
+            }
+            return false;
+        });
     }
 
     public void mostrarCargando(boolean cargando) {

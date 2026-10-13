@@ -2,52 +2,101 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:fitsSystemWindows="true">
+    android:background="@color/fondo"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="@string/login_titulo"
-        android:textSize="24sp" />
+    <LinearLayout
+        android:id="@+id/barraSuperior"
+        style="@style/Barra">
 
-    <EditText
-        android:id="@+id/txtUsuario"
+        <TextView
+            style="@style/Barra.Titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:accessibilityHeading="true"
+            android:text="@string/app_titulo" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/contenido"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/login_usuario"
-        android:inputType="text" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
 
-    <EditText
-        android:id="@+id/txtClave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/login_clave"
-        android:inputType="textPassword" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
-    <Button
-        android:id="@+id/btnIngresar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/login_ingresar" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/panel_fondo"
+                android:orientation="vertical"
+                android:padding="24dp">
 
-    <ProgressBar
-        android:id="@+id/prgCargando"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:indeterminate="true"
-        android:visibility="gone" />
+                <TextView
+                    style="@style/Texto.Display"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:accessibilityHeading="true"
+                    android:text="@string/login_titulo"
+                    android:textColor="@color/azul"
+                    android:textSize="28sp" />
 
-    <TextView
-        android:id="@+id/lblError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textColor="@android:color/holo_red_dark"
-        android:visibility="gone" />
+                <TextView
+                    style="@style/Texto.Etiqueta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:labelFor="@id/txtUsuario"
+                    android:text="@string/login_usuario" />
+
+                <EditText
+                    android:id="@+id/txtUsuario"
+                    style="@style/Campo"
+                    android:layout_marginTop="8dp"
+                    android:autofillHints="username"
+                    android:imeOptions="actionNext"
+                    android:inputType="text" />
+
+                <TextView
+                    style="@style/Texto.Etiqueta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:labelFor="@id/txtClave"
+                    android:text="@string/login_clave" />
+
+                <EditText
+                    android:id="@+id/txtClave"
+                    style="@style/Campo"
+                    android:layout_marginTop="8dp"
+                    android:autofillHints="password"
+                    android:imeOptions="actionGo"
+                    android:inputType="textPassword" />
+
+                <Button
+                    android:id="@+id/btnIngresar"
+                    style="@style/Boton.Primario"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/login_ingresar" />
+
+                <ProgressBar
+                    android:id="@+id/prgCargando"
+                    style="@style/Progreso"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/lblError"
+                    style="@style/Aviso.Error"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
 </LinearLayout>

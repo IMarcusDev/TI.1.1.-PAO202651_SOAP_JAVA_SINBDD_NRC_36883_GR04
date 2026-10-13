@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package ec.edu.monster.modelo.soap;
 
 import ec.edu.monster.modelo.ServicioException;
@@ -14,10 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-/**
- *
- * @author IMarcusDev
- */
 public class SoapTransporte {
     private static final int TIEMPO_ESPERA_POR_DEFECTO_MS = 10_000;
     

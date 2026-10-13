@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Tema.Conversor" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorPrimary">@color/azul</item>
+        <item name="android:colorPrimaryDark">@color/azul</item>
+        <item name="android:colorAccent">@color/azul</item>
+        <item name="android:colorControlActivated">@color/azul</item>
+        <item name="android:colorControlNormal">@color/campo_borde</item>
+        <item name="android:colorControlHighlight">@color/pulsacion</item>
+        <item name="android:colorBackground">@color/fondo</item>
+        <item name="android:windowBackground">@color/fondo</item>
+        <item name="android:statusBarColor">@color/azul</item>
+        <item name="android:navigationBarColor">@color/azul</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textColorPrimary">@color/tinta</item>
+        <item name="android:textColorSecondary">@color/tinta_suave</item>
+        <item name="android:textColorHint">@color/tinta_suave</item>
+    </style>
+</resources>

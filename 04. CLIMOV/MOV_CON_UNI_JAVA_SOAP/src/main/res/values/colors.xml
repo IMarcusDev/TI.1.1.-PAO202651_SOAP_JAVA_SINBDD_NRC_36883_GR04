@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fondo">#F4F5F7</color>
+    <color name="superficie">#FFFFFF</color>
+    <color name="tinta">#1F2933</color>
+    <color name="tinta_suave">#5B6472</color>
+    <color name="contorno">#DDE1E6</color>
+    <color name="campo_borde">#8C929B</color>
+    <color name="error">#B3261E</color>
+    <color name="error_fondo">#FBE9E7</color>
+    <color name="pulsacion">#1F2D4E78</color>
+
+    <color name="azul">#2D4E78</color>
+    <color name="sobre_azul">#FFFFFF</color>
+    <color name="sobre_azul_suave">#CCFFFFFF</color>
+    <color name="azul_marca">#59FFFFFF</color>
+    <color name="azul_relleno">#26FFFFFF</color>
+</resources>

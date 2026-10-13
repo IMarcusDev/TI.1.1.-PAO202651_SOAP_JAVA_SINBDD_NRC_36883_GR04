@@ -91,7 +91,7 @@ public class ConvertidorActivity extends Activity {
                 Conversion resultado = servicio.convertir(conversion);
                 enHiloPrincipal(() -> {
                     vista.mostrarCargando(false);
-                    vista.mostrarResultado(describir(resultado));
+                    vista.mostrarResultado(formatear(resultado.getResultado()), describir(resultado));
                 });
             } catch (ServicioException e) {
                 enHiloPrincipal(() -> {
@@ -103,11 +103,15 @@ public class ConvertidorActivity extends Activity {
     }
 
     private String describir(Conversion conversion) {
+        return getString(R.string.conv_resultado,
+                formatear(conversion.getValor()), conversion.getUnidadOrigen(),
+                formatear(conversion.getResultado()), conversion.getUnidadDestino());
+    }
+
+    private static String formatear(double numero) {
         NumberFormat formato = NumberFormat.getInstance();
         formato.setMaximumFractionDigits(6);
-        return getString(R.string.conv_resultado,
-                formato.format(conversion.getValor()), conversion.getUnidadOrigen(),
-                formato.format(conversion.getResultado()), conversion.getUnidadDestino());
+        return formato.format(numero);
     }
 
     private void enHiloPrincipal(Runnable accion) {

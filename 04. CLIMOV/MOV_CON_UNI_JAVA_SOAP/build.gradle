@@ -19,8 +19,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    // Las pruebas viven en ec/edu/monster/pruebas (junto a controlador, modelo y vista):
-    // se excluyen del APK y se compilan/ejecutan como pruebas unitarias.
     sourceSets {
         main {
             java.filter.exclude('ec/edu/monster/pruebas/**')
