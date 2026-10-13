@@ -1,4 +1,4 @@
-package ec.edu.monster.modelo.soap;
+package ec.edu.monster.modelos.soap;
 
 public class SoapConstructorPeticion {
     private static final String SOAP_ENV = "http://schemas.xmlsoap.org/soap/envelope/";

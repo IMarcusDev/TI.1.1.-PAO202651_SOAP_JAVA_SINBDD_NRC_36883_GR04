@@ -1,6 +1,6 @@
-package ec.edu.monster.modelo.soap;
+package ec.edu.monster.modelos.soap;
 
-import ec.edu.monster.modelo.ServicioException;
+import ec.edu.monster.modelos.excepciones.SoapException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +22,7 @@ public class SoapTransporte {
         this.tiempoEsperaMs = tiempoEsperaMs;
     }
     
-    public String enviar(String url, String sobre) throws ServicioException {
+    public String enviar(String url, String sobre) throws SoapException {
         HttpURLConnection conexion = null;
         try{
             conexion = (HttpURLConnection) new URL(url).openConnection();
@@ -45,9 +45,9 @@ public class SoapTransporte {
             if(codigo == HttpURLConnection.HTTP_INTERNAL_ERROR && conexion.getErrorStream() != null){
                 return leer(conexion.getErrorStream());
             }
-            throw new ServicioException("El servidor respondio con HTTP " + codigo + " en " + url);
+            throw new SoapException("El servidor respondio con HTTP " + codigo + " en " + url);
         } catch (IOException e) {
-            throw new ServicioException("No se pudo conectar con el servicio en " + url, e);
+            throw new SoapException("No se pudo conectar con el servicio en " + url, e);
         } finally {
             if (conexion != null) {
                 conexion.disconnect();

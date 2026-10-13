@@ -1,12 +1,12 @@
-package ec.edu.monster.pruebas;
+package ec.edu.monster.pruebas.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import ec.edu.monster.modelo.Conversion;
-import ec.edu.monster.modelo.Magnitud;
+import ec.edu.monster.modelos.data.Conversion;
+import ec.edu.monster.modelos.enums.Magnitud;
 import org.junit.Test;
 
 public class ConversionTest {

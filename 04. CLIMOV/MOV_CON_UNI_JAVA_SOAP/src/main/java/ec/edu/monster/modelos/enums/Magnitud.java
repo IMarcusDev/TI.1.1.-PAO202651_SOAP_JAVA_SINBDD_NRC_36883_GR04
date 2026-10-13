@@ -1,4 +1,4 @@
-package ec.edu.monster.modelo;
+package ec.edu.monster.modelos.enums;
 
 public enum Magnitud {
     AREA("Area"),

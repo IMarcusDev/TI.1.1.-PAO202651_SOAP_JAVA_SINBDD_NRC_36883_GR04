@@ -1,20 +1,20 @@
-package ec.edu.monster.pruebas.soap;
+package ec.edu.monster.pruebas.repositorios;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import ec.edu.monster.modelo.Conversion;
-import ec.edu.monster.modelo.Magnitud;
-import ec.edu.monster.modelo.ServicioException;
-import ec.edu.monster.modelo.soap.ConvertidorSoapCliente;
-import ec.edu.monster.modelo.soap.SoapTransporte;
+import ec.edu.monster.modelos.data.Conversion;
+import ec.edu.monster.modelos.enums.Magnitud;
+import ec.edu.monster.modelos.excepciones.SoapException;
+import ec.edu.monster.modelos.repositorios.ConvertidorSoapRepositorio;
+import ec.edu.monster.modelos.soap.SoapTransporte;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
-public class ConvertidorSoapClienteTest {
+public class ConvertidorSoapRepositorioTest {
 
     private static final String URL = "http://servidor/ConversorWebService";
     private static final String TOKEN = "token-de-prueba";
@@ -44,10 +44,10 @@ public class ConvertidorSoapClienteTest {
     }
 
     @Test
-    public void convertir_respuestaOk_asignaElResultadoYEnviaLosParametros() throws ServicioException {
+    public void convertir_respuestaOk_asignaElResultadoYEnviaLosParametros() throws SoapException {
         TransporteFalso transporte = new TransporteFalso(respuesta("convert",
                 "<estado>OK</estado><mensaje>Conversión Exitosa</mensaje><resultado>0.25</resultado>"));
-        ConvertidorSoapCliente cliente = new ConvertidorSoapCliente(URL, TOKEN, transporte);
+        ConvertidorSoapRepositorio cliente = new ConvertidorSoapRepositorio(URL, TOKEN, transporte);
         Conversion conversion = new Conversion(Magnitud.AREA, 2500, "cm2", "m2");
 
         cliente.convertir(conversion);
@@ -63,10 +63,10 @@ public class ConvertidorSoapClienteTest {
     public void convertir_estadoError_lanzaExcepcionConElMensajeDelServidor() {
         TransporteFalso transporte = new TransporteFalso(respuesta("convert",
                 "<estado>ERROR</estado><mensaje>Invalid Token</mensaje><resultado>0.0</resultado>"));
-        ConvertidorSoapCliente cliente = new ConvertidorSoapCliente(URL, TOKEN, transporte);
+        ConvertidorSoapRepositorio cliente = new ConvertidorSoapRepositorio(URL, TOKEN, transporte);
         Conversion conversion = new Conversion(Magnitud.AREA, 2500, "cm2", "m2");
 
-        ServicioException error = assertThrows(ServicioException.class,
+        SoapException error = assertThrows(SoapException.class,
                 () -> cliente.convertir(conversion));
 
         assertEquals("Invalid Token", error.getMessage());
@@ -77,17 +77,17 @@ public class ConvertidorSoapClienteTest {
     public void convertir_resultadoNoNumerico_lanzaExcepcion() {
         TransporteFalso transporte = new TransporteFalso(respuesta("convert",
                 "<estado>OK</estado><resultado>abc</resultado>"));
-        ConvertidorSoapCliente cliente = new ConvertidorSoapCliente(URL, TOKEN, transporte);
+        ConvertidorSoapRepositorio cliente = new ConvertidorSoapRepositorio(URL, TOKEN, transporte);
 
-        assertThrows(ServicioException.class,
+        assertThrows(SoapException.class,
                 () -> cliente.convertir(new Conversion(Magnitud.AREA, 1, "cm2", "m2")));
     }
 
     @Test
-    public void obtenerUnidades_respuestaOk_devuelveLasUnidades() throws ServicioException {
+    public void obtenerUnidades_respuestaOk_devuelveLasUnidades() throws SoapException {
         TransporteFalso transporte = new TransporteFalso(respuesta("catalog",
                 "<estado>OK</estado><resultado><unidad>m3</unidad><unidad>gal</unidad></resultado>"));
-        ConvertidorSoapCliente cliente = new ConvertidorSoapCliente(URL, TOKEN, transporte);
+        ConvertidorSoapRepositorio cliente = new ConvertidorSoapRepositorio(URL, TOKEN, transporte);
 
         List<String> unidades = cliente.obtenerUnidades(Magnitud.VOLUMEN);
 
@@ -96,10 +96,10 @@ public class ConvertidorSoapClienteTest {
     }
 
     @Test
-    public void obtenerUnidades_listaDevuelta_noSePuedeModificar() throws ServicioException {
+    public void obtenerUnidades_listaDevuelta_noSePuedeModificar() throws SoapException {
         TransporteFalso transporte = new TransporteFalso(respuesta("catalog",
                 "<estado>OK</estado><resultado><unidad>m3</unidad></resultado>"));
-        ConvertidorSoapCliente cliente = new ConvertidorSoapCliente(URL, TOKEN, transporte);
+        ConvertidorSoapRepositorio cliente = new ConvertidorSoapRepositorio(URL, TOKEN, transporte);
 
         List<String> unidades = cliente.obtenerUnidades(Magnitud.VOLUMEN);
 

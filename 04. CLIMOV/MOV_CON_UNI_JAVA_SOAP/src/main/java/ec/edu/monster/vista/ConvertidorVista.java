@@ -14,7 +14,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import ec.edu.monster.R;
-import ec.edu.monster.modelo.Magnitud;
+import ec.edu.monster.modelos.enums.Magnitud;
 import java.util.List;
 import java.util.function.Consumer;
 

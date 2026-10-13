@@ -1,4 +1,6 @@
-package ec.edu.monster.modelo;
+package ec.edu.monster.modelos.data;
+
+import ec.edu.monster.modelos.enums.Magnitud;
 
 public class Conversion {
     private final Magnitud magnitud;
