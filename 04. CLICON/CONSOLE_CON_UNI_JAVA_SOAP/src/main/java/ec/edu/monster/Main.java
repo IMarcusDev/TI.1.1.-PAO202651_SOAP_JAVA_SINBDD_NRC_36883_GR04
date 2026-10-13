@@ -1,4 +1,7 @@
+package ec.edu.monster;
 
+
+import ec.edu.monster.vista.ConverterView;
 import ec.edu.monster.vista.LoginView;
 import ec.edu.monster.vista.utils.MessagesUtils;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +19,7 @@ public class Main {
   public static void main(String[] args) throws InterruptedException {
     // Splash Art
     MessagesUtils.printMonster();
-    TimeUnit.SECONDS.sleep(1);
+    TimeUnit.SECONDS.sleep(3);
     
     // Login
     boolean login = LoginView.userHasLogin();
@@ -26,11 +29,9 @@ public class Main {
     }
     
     // Menu
-    System.out.println("Mostrar todo lo demás");
-    TimeUnit.SECONDS.sleep(10);
+    ConverterView.showMenu();
     
-    /// Convert
-    
-    /// Catalog
+    MessagesUtils.printMessage("Hasta Luego!");
+    TimeUnit.SECONDS.sleep(3);
   }
 }
