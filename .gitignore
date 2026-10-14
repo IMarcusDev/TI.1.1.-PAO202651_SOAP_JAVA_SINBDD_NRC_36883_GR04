@@ -14,6 +14,7 @@
 .atl/
 .gentle-ai/
 .pi/gentle-ai/
+odd/
 
 # CodeGraph: per-worktree SQLite index (rebuilt by `codegraph init`)
 .codegraph/
