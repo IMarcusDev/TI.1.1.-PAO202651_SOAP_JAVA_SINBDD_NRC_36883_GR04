@@ -16,6 +16,7 @@ public class ConversionControlador {
 
     private static final String VALOR_INVALIDO = "Ingrese un valor numérico válido";
     private static final String SIN_UNIDADES = "Seleccione la unidad de origen y de destino";
+    private static final String SIN_MAGNITUD = "Seleccione una magnitud";
     // Optional sign, digits and at most one decimal separator ("." or ","). No exponents or suffixes.
     private static final Pattern NUMERO = Pattern.compile("[+-]?(\\d+([.,]\\d+)?|[.,]\\d+)");
 
@@ -53,6 +54,11 @@ public class ConversionControlador {
             vista.mostrarError(VALOR_INVALIDO);
             return;
         }
+        String magnitud = vista.getMagnitud();
+        if (magnitud == null) {
+            vista.mostrarError(SIN_MAGNITUD);
+            return;
+        }
         String desde = vista.getUnidadOrigen();
         String hacia = vista.getUnidadDestino();
         if (desde == null || hacia == null) {
@@ -60,7 +66,7 @@ public class ConversionControlador {
             return;
         }
         try {
-            double resultado = servicio.convertir(vista.getMagnitud(), valor, desde, hacia);
+            double resultado = servicio.convertir(magnitud, valor, desde, hacia);
             vista.mostrarResultado(FormatoResultado.formatear(valor, desde, resultado, hacia));
         } catch (ServicioException e) {
             vista.mostrarError(e.getMessage());

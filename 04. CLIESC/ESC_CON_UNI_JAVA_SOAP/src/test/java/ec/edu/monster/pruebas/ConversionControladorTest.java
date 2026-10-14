@@ -97,6 +97,33 @@ class ConversionControladorTest {
     }
 
     @Test
+    void rejectsNumbersThatOverflowToInfinity() {
+        crearControlador();
+        vista.valor = "1" + "0".repeat(400);
+        vista.origen = "m2";
+        vista.destino = "ha";
+
+        vista.presionarConvertir();
+
+        assertEquals("Ingrese un valor numérico válido", vista.error);
+        assertEquals(0, conversor.conversiones);
+    }
+
+    @Test
+    void asksForMagnitudeWhenNoneSelected() {
+        crearControlador();
+        vista.magnitud = null;
+        vista.valor = "10";
+        vista.origen = "m2";
+        vista.destino = "ha";
+
+        vista.presionarConvertir();
+
+        assertEquals("Seleccione una magnitud", vista.error);
+        assertEquals(0, conversor.conversiones);
+    }
+
+    @Test
     void asksForUnitsWhenOnlyOriginIsSelected() {
         crearControlador();
         vista.valor = "10";
