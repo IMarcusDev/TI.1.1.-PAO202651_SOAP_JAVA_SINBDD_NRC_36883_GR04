@@ -7,6 +7,7 @@ import ec.edu.monster.ws.conversor.ConverterDTO;
 import ec.edu.monster.ws.login.LoginDTO;
 import ec.edu.monster.ws.login.LoginWebService;
 import ec.edu.monster.ws.login.LoginWebService_Service;
+import jakarta.xml.ws.BindingProvider;
 import jakarta.xml.ws.WebServiceException;
 import jakarta.xml.ws.soap.SOAPFaultException;
 import java.util.List;
@@ -23,6 +24,10 @@ public class ConversorServicio {
     private static final String SIN_RESPUESTA = "El servidor no devolvió una respuesta";
     private static final String SIN_TOKEN = "El servidor no devolvió un token de sesión";
     private static final String ERROR_GENERICO = "El servidor respondió con un error";
+    private static final String CONNECT_TIMEOUT = "com.sun.xml.ws.connect.timeout";
+    private static final String REQUEST_TIMEOUT = "com.sun.xml.ws.request.timeout";
+    private static final int CONNECT_TIMEOUT_MS = 5_000;
+    private static final int REQUEST_TIMEOUT_MS = 15_000;
 
     private final LoginWebService login;
     private final ConversorWebService conversor;
@@ -36,9 +41,17 @@ public class ConversorServicio {
 
     public static ConversorServicio crear(Sesion sesion) {
         return new ConversorServicio(
-                new LoginWebService_Service().getLoginWebServicePort(),
-                new ConversorWebService_Service().getConversorWebServicePort(),
+                conTimeouts(new LoginWebService_Service().getLoginWebServicePort()),
+                conTimeouts(new ConversorWebService_Service().getConversorWebServicePort()),
                 sesion);
+    }
+
+    // The server is shared by several clients and may stall: fail instead of waiting forever.
+    private static <T> T conTimeouts(T puerto) {
+        var contexto = ((BindingProvider) puerto).getRequestContext();
+        contexto.put(CONNECT_TIMEOUT, CONNECT_TIMEOUT_MS);
+        contexto.put(REQUEST_TIMEOUT, REQUEST_TIMEOUT_MS);
+        return puerto;
     }
 
     public void iniciarSesion(String usuario, String clave) throws ServicioException {
