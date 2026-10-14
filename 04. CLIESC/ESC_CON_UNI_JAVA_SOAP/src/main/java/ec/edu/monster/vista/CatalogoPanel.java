@@ -115,6 +115,9 @@ public class CatalogoPanel extends JPanel implements CatalogoVista {
                 listaMagnitudes.setSelectedIndex(0);
             }
             actualizando = false;
+            if (accionCambiarMagnitud != null && !copia.isEmpty()) {
+                Estilos.enSegundoPlano(accionCambiarMagnitud, this::mostrarError, listaMagnitudes);
+            }
         });
     }
 

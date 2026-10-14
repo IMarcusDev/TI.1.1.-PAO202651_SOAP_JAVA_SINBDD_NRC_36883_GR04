@@ -41,6 +41,15 @@ class ConversionControladorTest {
     }
 
     @Test
+    void loadsUnitsExactlyOnceOnStart() {
+        conversor.unidades = List.of("m", "ft");
+
+        crearControlador();
+
+        assertEquals(1, conversor.catalogosPedidos.size());
+    }
+
+    @Test
     void reloadsUnitsWhenMagnitudeChanges() {
         crearControlador();
         conversor.unidades = List.of("g", "kg");
@@ -283,7 +292,11 @@ class ConversionControladorTest {
         @Override
         public void mostrarMagnitudes(List<String> lista) {
             magnitudes = lista;
-            magnitud = lista.getFirst();
+            magnitud = lista.isEmpty() ? null : lista.getFirst();
+            // Mirrors the view contract: the first magnitude is notified like a user selection.
+            if (accionCambiarMagnitud != null && !lista.isEmpty()) {
+                accionCambiarMagnitud.run();
+            }
         }
 
         @Override

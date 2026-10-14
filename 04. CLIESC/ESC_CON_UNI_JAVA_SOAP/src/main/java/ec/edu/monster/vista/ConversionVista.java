@@ -7,6 +7,12 @@ import java.util.List;
  */
 public interface ConversionVista {
 
+    /**
+     * Shows the magnitudes and selects the first one. When the list is not
+     * empty, the action registered with {@code alCambiarMagnitud} is notified
+     * in the background, exactly like a user selection, so the initial units
+     * load never runs on the EDT.
+     */
     void mostrarMagnitudes(List<String> magnitudes);
 
     void mostrarUnidades(List<String> unidades);

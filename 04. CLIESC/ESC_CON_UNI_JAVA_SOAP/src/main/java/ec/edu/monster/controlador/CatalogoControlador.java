@@ -19,8 +19,8 @@ public class CatalogoControlador {
         this.vista = vista;
         this.servicio = servicio;
         vista.alCambiarMagnitud(this::cargarUnidades);
+        // The view notifies the first magnitude in the background, loading its units.
         vista.mostrarMagnitudes(Magnitudes.TODAS);
-        cargarUnidades();
     }
 
     private void cargarUnidades() {

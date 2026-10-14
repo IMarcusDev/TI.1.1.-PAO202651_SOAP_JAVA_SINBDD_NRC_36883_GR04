@@ -6,12 +6,12 @@ import static ec.edu.monster.pruebas.ConversionPanelTest.esperar;
 import static ec.edu.monster.pruebas.ConversionPanelTest.esperarHasta;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ec.edu.monster.vista.CatalogoPanel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.JList;
 import javax.swing.JTable;
@@ -67,23 +67,31 @@ class CatalogoPanelTest {
     }
 
     @Test
-    void programmaticFillsDoNotFireTheMagnitudeAction() throws Exception {
+    void showingMagnitudesNotifiesTheFirstOnceOffTheEdtAndUnitFillsDoNot() throws Exception {
         AtomicInteger disparos = new AtomicInteger();
-        panel.alCambiarMagnitud(disparos::incrementAndGet);
+        AtomicBoolean enHiloEdt = new AtomicBoolean();
+        panel.alCambiarMagnitud(() -> {
+            enHiloEdt.set(SwingUtilities.isEventDispatchThread());
+            disparos.incrementAndGet();
+        });
 
         enEdt(() -> {
             panel.mostrarMagnitudes(List.of("Area", "Masa"));
             panel.mostrarUnidades(List.of("m2", "ha"));
         });
+        esperarHasta(listaMagnitudes::isEnabled);
 
-        assertTrue(enEdt(listaMagnitudes::isEnabled), "no background action must have started");
-        assertEquals(0, disparos.get());
+        assertEquals(1, disparos.get());
+        assertFalse(enHiloEdt.get(), "the initial load must run off the EDT");
+        assertEquals("Area", panel.getMagnitud());
         assertEquals(2, enEdt(tablaUnidades::getRowCount));
     }
 
     @Test
     void locksTheMagnitudeListWhileUnitsLoadAndUnlocksAfterwards() throws Exception {
         enEdt(() -> panel.mostrarMagnitudes(List.of("Area", "Masa")));
+        // Let the initial magnitude notification finish before acting.
+        esperarHasta(listaMagnitudes::isEnabled);
         CountDownLatch iniciada = new CountDownLatch(1);
         CountDownLatch soltar = new CountDownLatch(1);
         panel.alCambiarMagnitud(() -> {
