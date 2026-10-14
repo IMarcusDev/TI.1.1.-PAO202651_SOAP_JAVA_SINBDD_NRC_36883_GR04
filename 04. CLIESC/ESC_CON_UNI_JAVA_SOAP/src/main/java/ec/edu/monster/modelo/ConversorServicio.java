@@ -22,6 +22,7 @@ public class ConversorServicio {
     private static final String SIN_SESION = "La sesión no está activa";
     private static final String SIN_RESPUESTA = "El servidor no devolvió una respuesta";
     private static final String SIN_TOKEN = "El servidor no devolvió un token de sesión";
+    private static final String ERROR_GENERICO = "El servidor respondió con un error";
 
     private final LoginWebService login;
     private final ConversorWebService conversor;
@@ -41,12 +42,14 @@ public class ConversorServicio {
     }
 
     public void iniciarSesion(String usuario, String clave) throws ServicioException {
+        // A new login attempt replaces the previous session, even if it fails.
+        sesion.cerrar();
         LoginDTO respuesta = llamar(() -> login.login(usuario, clave));
         if (respuesta == null) {
             throw new ServicioException(SIN_RESPUESTA);
         }
         if (respuesta.getEstado() != ec.edu.monster.ws.login.EstadosEnum.OK) {
-            throw new ServicioException(respuesta.getMensaje());
+            throw new ServicioException(mensajeOGenerico(respuesta.getMensaje()));
         }
         if (respuesta.getToken() == null || respuesta.getToken().isBlank()) {
             throw new ServicioException(SIN_TOKEN);
@@ -87,7 +90,7 @@ public class ConversorServicio {
             throw new ServicioException(SIN_RESPUESTA);
         }
         if (respuesta.getEstado() != ec.edu.monster.ws.conversor.EstadosEnum.OK) {
-            throw new ServicioException(respuesta.getMensaje());
+            throw new ServicioException(mensajeOGenerico(respuesta.getMensaje()));
         }
     }
 
@@ -96,9 +99,13 @@ public class ConversorServicio {
             return llamada.get();
         } catch (SOAPFaultException e) {
             // The server answered with a fault: show its message, not a connection error.
-            throw new ServicioException(e.getFault().getFaultString(), e);
+            throw new ServicioException(mensajeOGenerico(e.getFault().getFaultString()), e);
         } catch (WebServiceException e) {
             throw new ServicioException(SIN_CONEXION, e);
         }
+    }
+
+    private static String mensajeOGenerico(String mensaje) {
+        return mensaje == null || mensaje.isBlank() ? ERROR_GENERICO : mensaje;
     }
 }

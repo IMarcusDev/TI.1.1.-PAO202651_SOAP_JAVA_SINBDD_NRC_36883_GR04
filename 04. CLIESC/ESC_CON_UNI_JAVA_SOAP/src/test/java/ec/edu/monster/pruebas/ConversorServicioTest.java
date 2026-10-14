@@ -133,6 +133,82 @@ class ConversorServicioTest {
     }
 
     @Test
+    void usesGenericMessageWhenLoginErrorHasNoMessage() {
+        ConversorServicio servicio = new ConversorServicio(
+                (usuario, clave) -> loginError(null), new ConversorFalso(), sesion);
+
+        ServicioException error = assertThrows(ServicioException.class,
+                () -> servicio.iniciarSesion("user", "1234"));
+
+        assertEquals("El servidor respondió con un error", error.getMessage());
+    }
+
+    @Test
+    void usesGenericMessageWhenConversionErrorHasNoMessage() {
+        ConversorFalso conversor = new ConversorFalso();
+        conversor.respuestaConversion = conversionError(" ");
+        ConversorServicio servicio = servicioConSesion(conversor);
+
+        ServicioException error = assertThrows(ServicioException.class,
+                () -> servicio.convertir("Longitud", 1, "m", "ft"));
+
+        assertEquals("El servidor respondió con un error", error.getMessage());
+    }
+
+    @Test
+    void usesGenericMessageWhenSoapFaultHasNoText() throws SOAPException {
+        // SOAP 1.1 requires a faultstring, so a real server sends it at least blank.
+        SOAPFault fault = SOAPFactory.newInstance().createFault(" ",
+                new QName(SOAPConstants.URI_NS_SOAP_ENVELOPE, "Server"));
+        ConversorServicio servicio = new ConversorServicio(
+                (usuario, clave) -> {
+                    throw new SOAPFaultException(fault);
+                }, new ConversorFalso(), sesion);
+
+        ServicioException error = assertThrows(ServicioException.class,
+                () -> servicio.iniciarSesion("user", "1234"));
+
+        assertEquals("El servidor respondió con un error", error.getMessage());
+    }
+
+    @Test
+    void failedReloginClearsPreviousSession() {
+        sesion.iniciar("anterior", "tok-viejo");
+        ConversorServicio servicio = new ConversorServicio(
+                (usuario, clave) -> loginError("Credenciales incorrectas"), new ConversorFalso(), sesion);
+
+        assertThrows(ServicioException.class, () -> servicio.iniciarSesion("otro", "mala"));
+
+        assertFalse(sesion.estaActiva());
+    }
+
+    @Test
+    void returnsEmptyCatalogWhenServerSendsNoUnits() throws ServicioException {
+        ConversorFalso conversor = new ConversorFalso();
+        CatalogDTO vacio = new CatalogDTO();
+        vacio.setEstado(ec.edu.monster.ws.conversor.EstadosEnum.OK);
+        conversor.respuestaCatalogo = vacio;
+        ConversorServicio servicio = servicioConSesion(conversor);
+
+        assertEquals(List.of(), servicio.catalogo("Longitud"));
+    }
+
+    @Test
+    void throwsServerMessageWhenCatalogFails() {
+        ConversorFalso conversor = new ConversorFalso();
+        CatalogDTO fallido = new CatalogDTO();
+        fallido.setEstado(ec.edu.monster.ws.conversor.EstadosEnum.ERROR);
+        fallido.setMensaje("Magnitud no soportada");
+        conversor.respuestaCatalogo = fallido;
+        ConversorServicio servicio = servicioConSesion(conversor);
+
+        ServicioException error = assertThrows(ServicioException.class,
+                () -> servicio.catalogo("Energia"));
+
+        assertEquals("Magnitud no soportada", error.getMessage());
+    }
+
+    @Test
     void closesSession() throws ServicioException {
         ConversorServicio servicio = servicioConSesion(new ConversorFalso());
 
