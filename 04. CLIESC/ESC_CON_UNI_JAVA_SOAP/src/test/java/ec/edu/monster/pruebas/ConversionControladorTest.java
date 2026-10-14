@@ -1,0 +1,245 @@
+package ec.edu.monster.pruebas;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import ec.edu.monster.controlador.ConversionControlador;
+import ec.edu.monster.modelo.ConversorServicio;
+import ec.edu.monster.modelo.Sesion;
+import ec.edu.monster.vista.ConversionVista;
+import ec.edu.monster.ws.conversor.CatalogDTO;
+import ec.edu.monster.ws.conversor.ConversorWebService;
+import ec.edu.monster.ws.conversor.ConverterDTO;
+import ec.edu.monster.ws.conversor.EstadosEnum;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ConversionControladorTest {
+
+    private final Sesion sesion = new Sesion();
+    private final VistaConversionFalsa vista = new VistaConversionFalsa();
+    private final ConversorFalso conversor = new ConversorFalso();
+
+    @BeforeEach
+    void iniciarSesion() {
+        sesion.iniciar("user", "tok-1");
+    }
+
+    @Test
+    void showsTheSixMagnitudesAndLoadsUnitsOfTheFirstOnStart() {
+        conversor.unidades = List.of("m2", "ha");
+
+        crearControlador();
+
+        assertEquals(List.of("Area", "Longitud", "Masa", "Temperatura", "Tiempo", "Volumen"), vista.magnitudes);
+        assertEquals(List.of("Area"), conversor.catalogosPedidos);
+        assertEquals(List.of("m2", "ha"), vista.unidades);
+    }
+
+    @Test
+    void reloadsUnitsWhenMagnitudeChanges() {
+        crearControlador();
+        conversor.unidades = List.of("m", "ft");
+
+        vista.seleccionarMagnitud("Longitud");
+
+        assertEquals("Longitud", conversor.catalogosPedidos.getLast());
+        assertEquals(List.of("m", "ft"), vista.unidades);
+    }
+
+    @Test
+    void convertsAndShowsFormattedResultAcceptingDecimalComma() {
+        crearControlador();
+        vista.seleccionarMagnitud("Masa");
+        conversor.resultado = conversionOk(2500);
+        vista.valor = "2,5";
+        vista.origen = "kg";
+        vista.destino = "g";
+
+        vista.presionarConvertir();
+
+        assertEquals(2.5, conversor.ultimoValor);
+        assertEquals("Masa", conversor.ultimaMagnitud);
+        assertEquals("2,5 kg = 2500,0000 g", vista.resultado);
+        assertNull(vista.error);
+    }
+
+    @Test
+    void rejectsNonNumericValueWithoutCallingServer() {
+        crearControlador();
+        vista.valor = "abc";
+        vista.origen = "m2";
+        vista.destino = "ha";
+
+        vista.presionarConvertir();
+
+        assertEquals("Ingrese un valor numérico válido", vista.error);
+        assertEquals(0, conversor.conversiones);
+    }
+
+    @Test
+    void asksForUnitsWhenNoneSelected() {
+        crearControlador();
+        vista.valor = "10";
+
+        vista.presionarConvertir();
+
+        assertEquals("Seleccione la unidad de origen y de destino", vista.error);
+        assertEquals(0, conversor.conversiones);
+    }
+
+    @Test
+    void showsServerMessageWhenConversionFails() {
+        crearControlador();
+        conversor.resultado = conversionError("Unidad no soportada");
+        vista.valor = "1";
+        vista.origen = "m2";
+        vista.destino = "xx";
+
+        vista.presionarConvertir();
+
+        assertEquals("Unidad no soportada", vista.error);
+        assertNull(vista.resultado);
+    }
+
+    @Test
+    void showsServerMessageWhenCatalogFails() {
+        conversor.catalogoFalla = true;
+
+        crearControlador();
+
+        assertEquals("Magnitud no soportada", vista.error);
+    }
+
+    private void crearControlador() {
+        new ConversionControlador(vista, new ConversorServicio(
+                (usuario, clave) -> {
+                    throw new AssertionError("Conversion must not log in");
+                }, conversor, sesion));
+    }
+
+    private static ConverterDTO conversionOk(double resultado) {
+        ConverterDTO dto = new ConverterDTO();
+        dto.setEstado(EstadosEnum.OK);
+        dto.setResultado(resultado);
+        return dto;
+    }
+
+    private static ConverterDTO conversionError(String mensaje) {
+        ConverterDTO dto = new ConverterDTO();
+        dto.setEstado(EstadosEnum.ERROR);
+        dto.setMensaje(mensaje);
+        return dto;
+    }
+
+    private static final class VistaConversionFalsa implements ConversionVista {
+
+        private List<String> magnitudes = List.of();
+        private List<String> unidades = List.of();
+        private String magnitud;
+        private String valor = "";
+        private String origen;
+        private String destino;
+        private String resultado;
+        private String error;
+        private Runnable accionConvertir;
+        private Runnable accionCambiarMagnitud;
+
+        void presionarConvertir() {
+            accionConvertir.run();
+        }
+
+        void seleccionarMagnitud(String nueva) {
+            magnitud = nueva;
+            accionCambiarMagnitud.run();
+        }
+
+        @Override
+        public void mostrarMagnitudes(List<String> lista) {
+            magnitudes = lista;
+            magnitud = lista.getFirst();
+        }
+
+        @Override
+        public void mostrarUnidades(List<String> lista) {
+            unidades = lista;
+        }
+
+        @Override
+        public String getMagnitud() {
+            return magnitud;
+        }
+
+        @Override
+        public String getValor() {
+            return valor;
+        }
+
+        @Override
+        public String getUnidadOrigen() {
+            return origen;
+        }
+
+        @Override
+        public String getUnidadDestino() {
+            return destino;
+        }
+
+        @Override
+        public void mostrarResultado(String texto) {
+            resultado = texto;
+        }
+
+        @Override
+        public void mostrarError(String mensaje) {
+            error = mensaje;
+        }
+
+        @Override
+        public void alConvertir(Runnable accion) {
+            accionConvertir = accion;
+        }
+
+        @Override
+        public void alCambiarMagnitud(Runnable accion) {
+            accionCambiarMagnitud = accion;
+        }
+    }
+
+    private static final class ConversorFalso implements ConversorWebService {
+
+        private List<String> unidades = List.of();
+        private boolean catalogoFalla;
+        private final List<String> catalogosPedidos = new ArrayList<>();
+        private ConverterDTO resultado = conversionOk(0);
+        private int conversiones;
+        private double ultimoValor;
+        private String ultimaMagnitud;
+
+        @Override
+        public ConverterDTO convert(String token, String type, double value, String from, String to) {
+            conversiones++;
+            ultimoValor = value;
+            ultimaMagnitud = type;
+            return resultado;
+        }
+
+        @Override
+        public CatalogDTO catalog(String token, String type) {
+            catalogosPedidos.add(type);
+            CatalogDTO dto = new CatalogDTO();
+            if (catalogoFalla) {
+                dto.setEstado(EstadosEnum.ERROR);
+                dto.setMensaje("Magnitud no soportada");
+                return dto;
+            }
+            dto.setEstado(EstadosEnum.OK);
+            CatalogDTO.Resultado lista = new CatalogDTO.Resultado();
+            lista.getUnidad().addAll(unidades);
+            dto.setResultado(lista);
+            return dto;
+        }
+    }
+}
