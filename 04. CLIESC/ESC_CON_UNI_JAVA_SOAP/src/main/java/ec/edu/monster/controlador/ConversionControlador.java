@@ -36,6 +36,7 @@ public class ConversionControlador {
         vista.limpiarMensajes();
         String magnitud = vista.getMagnitud();
         if (magnitud == null) {
+            vista.mostrarUnidades(List.of());
             return;
         }
         try {

@@ -76,6 +76,7 @@ class CatalogoControladorTest {
 
     @Test
     void skipsServerWhenNoMagnitudeIsSelected() {
+        conversor.unidades = List.of("m2", "ha");
         crearControlador();
         int pedidosPrevios = conversor.pedidos.size();
 
