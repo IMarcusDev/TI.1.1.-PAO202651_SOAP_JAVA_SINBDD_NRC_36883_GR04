@@ -113,6 +113,18 @@ class ConversionControladorTest {
         assertEquals("Magnitud no soportada", vista.error);
     }
 
+    @Test
+    void clearsPreviousUnitsWhenCatalogFailsAfterMagnitudeChange() {
+        conversor.unidades = List.of("m2", "ha");
+        crearControlador();
+        conversor.catalogoFalla = true;
+
+        vista.seleccionarMagnitud("Longitud");
+
+        assertEquals(List.of(), vista.unidades);
+        assertEquals("Magnitud no soportada", vista.error);
+    }
+
     private void crearControlador() {
         new ConversionControlador(vista, new ConversorServicio(
                 (usuario, clave) -> {

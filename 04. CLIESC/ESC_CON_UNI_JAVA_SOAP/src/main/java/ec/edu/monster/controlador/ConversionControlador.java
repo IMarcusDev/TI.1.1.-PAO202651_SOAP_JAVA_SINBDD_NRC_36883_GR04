@@ -5,6 +5,7 @@ import ec.edu.monster.modelo.FormatoResultado;
 import ec.edu.monster.modelo.Magnitudes;
 import ec.edu.monster.modelo.ServicioException;
 import ec.edu.monster.vista.ConversionVista;
+import java.util.List;
 
 /**
  * Handles the conversion screen: loads the units of the selected magnitude,
@@ -35,6 +36,8 @@ public class ConversionControlador {
         try {
             vista.mostrarUnidades(servicio.catalogo(magnitud));
         } catch (ServicioException e) {
+            // Never leave the previous magnitude's units selectable.
+            vista.mostrarUnidades(List.of());
             vista.mostrarError(e.getMessage());
         }
     }
