@@ -1,0 +1,25 @@
+<%-- Shared header. The including page declares the "c" taglib and may set
+     "seccion" (menu, conversion, catalogo) to show the navigation. --%>
+<header class="cabecera">
+    <span class="cabecera-titulo">Conversión de Unidades Monster</span>
+    <c:choose>
+        <c:when test="${not empty seccion}">
+            <nav class="cabecera-menu">
+                <a href="${pageContext.request.contextPath}/conversion"
+                   class="${seccion == 'conversion' ? 'activo' : ''}">Convertir</a>
+                <a href="${pageContext.request.contextPath}/catalogo"
+                   class="${seccion == 'catalogo' ? 'activo' : ''}">Catálogo</a>
+                <form method="post" action="${pageContext.request.contextPath}/logout" class="cabecera-salir">
+                    <button type="submit">Cerrar sesión</button>
+                </form>
+            </nav>
+            <span class="estado"><span class="estado-punto"></span>Sesión activa</span>
+        </c:when>
+        <c:when test="${servicioDisponible}">
+            <span class="estado"><span class="estado-punto"></span>Servicio disponible</span>
+        </c:when>
+        <c:otherwise>
+            <span class="estado"><span class="estado-punto inactivo"></span>Servicio no disponible</span>
+        </c:otherwise>
+    </c:choose>
+</header>

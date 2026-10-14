@@ -40,9 +40,15 @@ public class ConversorServicio {
     }
 
     public static ConversorServicio crear(Sesion sesion) {
+        return crear(sesion, new LoginWebService_Service(), new ConversorWebService_Service());
+    }
+
+    // Reuses services built once per application; ports stay per caller.
+    public static ConversorServicio crear(Sesion sesion, LoginWebService_Service loginServicio,
+            ConversorWebService_Service conversorServicio) {
         return new ConversorServicio(
-                conTimeouts(new LoginWebService_Service().getLoginWebServicePort()),
-                conTimeouts(new ConversorWebService_Service().getConversorWebServicePort()),
+                conTimeouts(loginServicio.getLoginWebServicePort()),
+                conTimeouts(conversorServicio.getConversorWebServicePort()),
                 sesion);
     }
 
