@@ -29,13 +29,13 @@ class CatalogoControladorTest {
 
     @Test
     void showsTheSixMagnitudesAndUnitsOfTheFirstOnStart() {
-        conversor.unidades = List.of("m2", "ha", "km2");
+        conversor.unidades = List.of("m", "cm", "ft");
 
         crearControlador();
 
-        assertEquals(List.of("Area", "Longitud", "Masa", "Temperatura", "Tiempo", "Volumen"), vista.magnitudes);
-        assertEquals(List.of("Area"), conversor.pedidos);
-        assertEquals(List.of("m2", "ha", "km2"), vista.unidades);
+        assertEquals(List.of("Longitud", "Masa", "Volumen", "Tiempo", "Temperatura", "Area"), vista.magnitudes);
+        assertEquals(List.of("Longitud"), conversor.pedidos);
+        assertEquals(List.of("m", "cm", "ft"), vista.unidades);
     }
 
     @Test
@@ -55,7 +55,7 @@ class CatalogoControladorTest {
         crearControlador();
         conversor.falla = true;
 
-        vista.seleccionarMagnitud("Longitud");
+        vista.seleccionarMagnitud("Masa");
 
         assertEquals(List.of(), vista.unidades);
         assertEquals("Magnitud no soportada", vista.error);

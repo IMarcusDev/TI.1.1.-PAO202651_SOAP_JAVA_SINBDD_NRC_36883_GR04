@@ -1,25 +1,36 @@
 package ec.edu.monster.vista;
 
+import ec.edu.monster.modelo.Magnitudes;
+import ec.edu.monster.modelo.NombresUnidades;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * "Catálogo" tab: magnitudes on the left, units of the selected one on the right.
- * The server only returns unit symbols, so that is all the table shows.
+ * "Consultar catálogo" screen: magnitudes on the left, units of the selected
+ * one on the right. The list keeps server names; the table shows each symbol
+ * with its Spanish name.
  */
 public class CatalogoPanel extends JPanel implements CatalogoVista {
 
     private final JList<String> listaMagnitudes = new JList<>();
-    private final DefaultTableModel modeloUnidades = new DefaultTableModel(new Object[] {"Unidad"}, 0) {
+    private final DefaultTableModel modeloUnidades = new DefaultTableModel(new Object[] {"Nombre", "Símbolo"}, 0) {
         @Override
         public boolean isCellEditable(int fila, int columna) {
             return false;
@@ -37,7 +48,7 @@ public class CatalogoPanel extends JPanel implements CatalogoVista {
     public CatalogoPanel() {
         super(new BorderLayout(0, 16));
         setBackground(Estilos.FONDO);
-        setBorder(BorderFactory.createEmptyBorder(20, 24, 20, 24));
+        setBorder(BorderFactory.createEmptyBorder(28, 34, 0, 34));
 
         add(Estilos.titulo("Consultar catálogo"), BorderLayout.NORTH);
         add(construirCuerpo(), BorderLayout.CENTER);
@@ -52,29 +63,32 @@ public class CatalogoPanel extends JPanel implements CatalogoVista {
 
     private JPanel construirCuerpo() {
         listaMagnitudes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listaMagnitudes.setFont(Estilos.FUENTE);
-        listaMagnitudes.setForeground(Estilos.TEXTO);
-        listaMagnitudes.setSelectionBackground(Estilos.PRIMARIO);
-        listaMagnitudes.setSelectionForeground(Estilos.BLANCO);
-        listaMagnitudes.setFixedCellHeight(32);
+        listaMagnitudes.setFixedCellHeight(44);
+        listaMagnitudes.setCellRenderer(new MagnitudRenderer());
+        listaMagnitudes.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
         JScrollPane scrollMagnitudes = new JScrollPane(listaMagnitudes);
         scrollMagnitudes.setBorder(BorderFactory.createLineBorder(Estilos.BORDE));
-        scrollMagnitudes.setPreferredSize(new Dimension(200, 0));
+        scrollMagnitudes.setPreferredSize(new Dimension(208, 0));
 
         tablaUnidades.setFont(Estilos.FUENTE);
         tablaUnidades.setForeground(Estilos.TEXTO);
-        tablaUnidades.setRowHeight(28);
+        tablaUnidades.setRowHeight(38);
+        tablaUnidades.setShowVerticalLines(false);
         tablaUnidades.setGridColor(Estilos.BORDE);
         tablaUnidades.setFocusable(false);
         tablaUnidades.setRowSelectionAllowed(false);
-        tablaUnidades.getTableHeader().setFont(Estilos.FUENTE_ETIQUETA);
-        tablaUnidades.getTableHeader().setForeground(Estilos.PRIMARIO);
+        tablaUnidades.setFillsViewportHeight(true);
+        tablaUnidades.setDefaultRenderer(Object.class, celda(Estilos.FUENTE, Estilos.TEXTO, false));
+        tablaUnidades.getTableHeader().setDefaultRenderer(
+                celda(Estilos.FUENTE_ETIQUETA, Estilos.PRIMARIO, true));
+        tablaUnidades.getTableHeader().setPreferredSize(new Dimension(0, 38));
         tablaUnidades.getTableHeader().setReorderingAllowed(false);
+        tablaUnidades.getTableHeader().setResizingAllowed(false);
         JScrollPane scrollUnidades = new JScrollPane(tablaUnidades);
         scrollUnidades.setBorder(BorderFactory.createLineBorder(Estilos.BORDE));
         scrollUnidades.getViewport().setBackground(Estilos.BLANCO);
 
-        JPanel cuerpo = new JPanel(new BorderLayout(16, 0));
+        JPanel cuerpo = new JPanel(new BorderLayout(20, 0));
         cuerpo.setOpaque(false);
         cuerpo.add(scrollMagnitudes, BorderLayout.WEST);
         cuerpo.add(scrollUnidades, BorderLayout.CENTER);
@@ -115,7 +129,7 @@ public class CatalogoPanel extends JPanel implements CatalogoVista {
         Estilos.enEdt(() -> {
             modeloUnidades.setRowCount(0);
             for (String unidad : copia) {
-                modeloUnidades.addRow(new Object[] {unidad});
+                modeloUnidades.addRow(new Object[] {NombresUnidades.nombre(unidad), unidad});
             }
         });
     }
@@ -133,5 +147,57 @@ public class CatalogoPanel extends JPanel implements CatalogoVista {
     @Override
     public void alCambiarMagnitud(Runnable accion) {
         this.accionCambiarMagnitud = accion;
+    }
+
+    private static DefaultTableCellRenderer celda(Font fuente, Color color, boolean encabezado) {
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable tabla, Object valor, boolean seleccionado,
+                    boolean foco, int fila, int columna) {
+                super.getTableCellRendererComponent(tabla, valor, false, false, fila, columna);
+                // The base renderer resets the font to the table's on every call.
+                setFont(fuente);
+                setBorder(encabezado
+                        ? BorderFactory.createCompoundBorder(
+                                BorderFactory.createMatteBorder(0, 0, 1, 0, Estilos.BORDE),
+                                BorderFactory.createEmptyBorder(0, 12, 0, 12))
+                        : BorderFactory.createEmptyBorder(0, 12, 0, 12));
+                return this;
+            }
+        };
+        renderer.setForeground(color);
+        renderer.setBackground(encabezado ? Estilos.FONDO_RESULTADO : Estilos.BLANCO);
+        return renderer;
+    }
+
+    /** Shows the display name; the selected item gets a rounded primary highlight. */
+    private static final class MagnitudRenderer extends DefaultListCellRenderer {
+
+        private boolean seleccionado;
+
+        @Override
+        public Component getListCellRendererComponent(JList<?> lista, Object valor, int indice,
+                boolean seleccionado, boolean foco) {
+            super.getListCellRendererComponent(lista, Magnitudes.nombreVisible((String) valor),
+                    indice, false, false);
+            this.seleccionado = seleccionado;
+            setOpaque(false);
+            setFont(seleccionado ? Estilos.FUENTE_NEGRITA : Estilos.FUENTE);
+            setForeground(seleccionado ? Estilos.BLANCO : Estilos.TEXTO);
+            setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 12));
+            return this;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            if (seleccionado) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Estilos.PRIMARIO);
+                g2.fillRoundRect(0, 2, getWidth(), getHeight() - 4, 6, 6);
+                g2.dispose();
+            }
+            super.paintComponent(g);
+        }
     }
 }

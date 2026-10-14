@@ -1,13 +1,16 @@
 package ec.edu.monster.vista;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.WindowEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -37,54 +40,52 @@ public class LoginFrame extends JFrame implements LoginVista {
         setSize(640, 480);
         setLocationRelativeTo(null);
         setContentPane(construirContenido());
+        JMenu archivo = Estilos.menu("Archivo");
+        archivo.add(Estilos.opcion("Salir",
+                () -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING))));
+        setJMenuBar(Estilos.barraMenu(archivo, Estilos.menuAyuda(this)));
         getRootPane().setDefaultButton(botonIngresar);
         botonIngresar.addActionListener(e -> ingresar());
     }
 
     private JPanel construirContenido() {
-        JPanel raiz = new JPanel(new BorderLayout());
-        raiz.setBackground(Estilos.FONDO);
-
-        JPanel tarjeta = new JPanel(new GridBagLayout());
-        tarjeta.setBackground(Estilos.BLANCO);
-        tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Estilos.BORDE),
-                BorderFactory.createEmptyBorder(28, 36, 28, 36)));
-
+        JPanel formulario = new JPanel(new GridBagLayout());
+        formulario.setOpaque(false);
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1;
 
-        c.insets = new Insets(0, 0, 20, 0);
-        tarjeta.add(Estilos.titulo("Iniciar sesión"), c);
-        c.insets = new Insets(0, 0, 4, 0);
-        tarjeta.add(Estilos.etiqueta("Usuario"), c);
-        c.insets = new Insets(0, 0, 14, 0);
-        tarjeta.add(campoUsuario, c);
-        c.insets = new Insets(0, 0, 4, 0);
-        tarjeta.add(Estilos.etiqueta("Contraseña"), c);
-        c.insets = new Insets(0, 0, 20, 0);
-        tarjeta.add(campoClave, c);
+        c.insets = new Insets(0, 0, 22, 0);
+        formulario.add(Estilos.titulo("Iniciar sesión"), c);
+        c.insets = new Insets(0, 0, 8, 0);
+        formulario.add(Estilos.etiqueta("Usuario"), c);
+        c.insets = new Insets(0, 0, 22, 0);
+        formulario.add(campoUsuario, c);
+        c.insets = new Insets(0, 0, 8, 0);
+        formulario.add(Estilos.etiqueta("Contraseña"), c);
+        c.insets = new Insets(0, 0, 22, 0);
+        formulario.add(campoClave, c);
 
         JPanel filaBoton = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         filaBoton.setOpaque(false);
+        botonIngresar.setPreferredSize(new Dimension(126, 40));
         filaBoton.add(botonIngresar);
         c.insets = new Insets(0, 0, 0, 0);
-        tarjeta.add(filaBoton, c);
-
-        JPanel centro = new JPanel(new GridBagLayout());
-        centro.setOpaque(false);
-        GridBagConstraints ct = new GridBagConstraints();
-        ct.ipadx = 160;
-        centro.add(tarjeta, ct);
+        formulario.add(filaBoton, c);
 
         JPanel estado = Estilos.estadoServicio("Servicio disponible");
-        estado.setBorder(BorderFactory.createEmptyBorder(0, 12, 8, 12));
+        estado.setBorder(BorderFactory.createEmptyBorder(0, 50, 18, 50));
 
-        raiz.add(centro, BorderLayout.CENTER);
-        raiz.add(estado, BorderLayout.SOUTH);
-        return raiz;
+        JPanel raiz = new JPanel(new BorderLayout());
+        raiz.setBackground(Estilos.FONDO);
+        raiz.setBorder(BorderFactory.createEmptyBorder(36, 50, 0, 50));
+        raiz.add(formulario, BorderLayout.NORTH);
+        JPanel contenedor = new JPanel(new BorderLayout());
+        contenedor.setBackground(Estilos.FONDO);
+        contenedor.add(raiz, BorderLayout.CENTER);
+        contenedor.add(estado, BorderLayout.SOUTH);
+        return contenedor;
     }
 
     private void ingresar() {

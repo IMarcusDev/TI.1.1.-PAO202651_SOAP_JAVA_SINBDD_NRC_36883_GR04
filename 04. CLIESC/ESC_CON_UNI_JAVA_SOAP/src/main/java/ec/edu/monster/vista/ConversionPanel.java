@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import ec.edu.monster.modelo.Magnitudes;
+import ec.edu.monster.modelo.NombresUnidades;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,13 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * "Convertir" tab: magnitude and unit selectors, value input and result area.
+ * "Convertir unidades" screen: magnitude and unit selectors, value input and
+ * result area. Combo models hold server values; renderers show display names.
  */
 public class ConversionPanel extends JPanel implements ConversionVista {
 
-    private final JComboBox<String> comboCategoria = Estilos.entrada(new JComboBox<>());
-    private final JComboBox<String> comboDesde = Estilos.entrada(new JComboBox<>());
-    private final JComboBox<String> comboHacia = Estilos.entrada(new JComboBox<>());
+    private final JComboBox<String> comboCategoria = Estilos.combo(Magnitudes::nombreVisible);
+    private final JComboBox<String> comboDesde = Estilos.combo(ConversionPanel::unidadVisible);
+    private final JComboBox<String> comboHacia = Estilos.combo(ConversionPanel::unidadVisible);
     private final JTextField campoValor = Estilos.entrada(new JTextField());
     private final JButton botonConvertir = Estilos.botonPrimario("Convertir");
     private final JLabel etiquetaResultado = new JLabel(" ");
@@ -43,7 +46,7 @@ public class ConversionPanel extends JPanel implements ConversionVista {
     public ConversionPanel() {
         super(new BorderLayout());
         setBackground(Estilos.FONDO);
-        setBorder(BorderFactory.createEmptyBorder(20, 24, 20, 24));
+        setBorder(BorderFactory.createEmptyBorder(28, 34, 12, 34));
         add(construirContenido(), BorderLayout.NORTH);
 
         comboCategoria.addActionListener(e -> cambiarMagnitud());
@@ -59,9 +62,9 @@ public class ConversionPanel extends JPanel implements ConversionVista {
         contenido.setLayout(new BoxLayout(contenido, BoxLayout.Y_AXIS));
 
         JLabel titulo = Estilos.titulo("Convertir unidades");
-        titulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 16, 0));
+        titulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 18, 0));
 
-        JPanel selectores = new JPanel(new GridLayout(1, 3, 16, 0));
+        JPanel selectores = new JPanel(new GridLayout(1, 3, 12, 0));
         selectores.setOpaque(false);
         selectores.add(campo("Categoría", comboCategoria));
         selectores.add(campo("Desde", comboDesde));
@@ -76,12 +79,13 @@ public class ConversionPanel extends JPanel implements ConversionVista {
         filaValor.add(campo("Valor", campoValor), c);
         c.weightx = 0;
         c.fill = GridBagConstraints.NONE;
-        c.insets = new Insets(0, 16, 0, 0);
+        c.insets = new Insets(0, 12, 0, 0);
+        botonConvertir.setPreferredSize(new Dimension(134, 36));
         filaValor.add(botonConvertir, c);
 
         contenido.add(alinear(titulo));
         contenido.add(alinear(selectores));
-        contenido.add(alinear(espacio(16)));
+        contenido.add(alinear(espacio(18)));
         contenido.add(alinear(filaValor));
         contenido.add(alinear(espacio(20)));
         contenido.add(alinear(construirResultado()));
@@ -91,12 +95,15 @@ public class ConversionPanel extends JPanel implements ConversionVista {
     }
 
     private JPanel construirResultado() {
-        JPanel resultado = new JPanel(new BorderLayout(0, 6));
+        JPanel resultado = new JPanel(new BorderLayout(0, 8));
         resultado.setBackground(Estilos.FONDO_RESULTADO);
         resultado.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 6, 0, 0, Estilos.PRIMARIO),
-                BorderFactory.createEmptyBorder(12, 16, 12, 16)));
-        resultado.add(Estilos.etiqueta("Resultado"), BorderLayout.NORTH);
+                BorderFactory.createEmptyBorder(20, 26, 22, 26)));
+        JLabel encabezado = new JLabel("Resultado");
+        encabezado.setFont(Estilos.FUENTE_PEQUENA);
+        encabezado.setForeground(Estilos.PRIMARIO);
+        resultado.add(encabezado, BorderLayout.NORTH);
         etiquetaResultado.setFont(Estilos.FUENTE_RESULTADO);
         etiquetaResultado.setForeground(Estilos.TEXTO);
         resultado.add(etiquetaResultado, BorderLayout.CENTER);
@@ -104,7 +111,7 @@ public class ConversionPanel extends JPanel implements ConversionVista {
     }
 
     private static JPanel campo(String texto, JComponent componente) {
-        JPanel panel = new JPanel(new BorderLayout(0, 4));
+        JPanel panel = new JPanel(new BorderLayout(0, 6));
         panel.setOpaque(false);
         panel.add(Estilos.etiqueta(texto), BorderLayout.NORTH);
         panel.add(componente, BorderLayout.CENTER);
@@ -148,6 +155,10 @@ public class ConversionPanel extends JPanel implements ConversionVista {
     private void enSegundoPlano(Runnable accion) {
         Estilos.enSegundoPlano(accion, this::mostrarError,
                 comboCategoria, comboDesde, comboHacia, campoValor, botonConvertir);
+    }
+
+    private static String unidadVisible(String simbolo) {
+        return Estilos.unidadVisible(simbolo, NombresUnidades.nombre(simbolo));
     }
 
     private static String seleccion(JComboBox<String> combo) {

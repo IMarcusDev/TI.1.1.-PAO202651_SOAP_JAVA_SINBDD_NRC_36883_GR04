@@ -31,24 +31,24 @@ class ConversionControladorTest {
 
     @Test
     void showsTheSixMagnitudesAndLoadsUnitsOfTheFirstOnStart() {
-        conversor.unidades = List.of("m2", "ha");
+        conversor.unidades = List.of("m", "ft");
 
         crearControlador();
 
-        assertEquals(List.of("Area", "Longitud", "Masa", "Temperatura", "Tiempo", "Volumen"), vista.magnitudes);
-        assertEquals(List.of("Area"), conversor.catalogosPedidos);
-        assertEquals(List.of("m2", "ha"), vista.unidades);
+        assertEquals(List.of("Longitud", "Masa", "Volumen", "Tiempo", "Temperatura", "Area"), vista.magnitudes);
+        assertEquals(List.of("Longitud"), conversor.catalogosPedidos);
+        assertEquals(List.of("m", "ft"), vista.unidades);
     }
 
     @Test
     void reloadsUnitsWhenMagnitudeChanges() {
         crearControlador();
-        conversor.unidades = List.of("m", "ft");
+        conversor.unidades = List.of("g", "kg");
 
-        vista.seleccionarMagnitud("Longitud");
+        vista.seleccionarMagnitud("Masa");
 
-        assertEquals("Longitud", conversor.catalogosPedidos.getLast());
-        assertEquals(List.of("m", "ft"), vista.unidades);
+        assertEquals("Masa", conversor.catalogosPedidos.getLast());
+        assertEquals(List.of("g", "kg"), vista.unidades);
     }
 
     @Test
