@@ -101,6 +101,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
-        <exec.mainClass>ec.edu.monster.ESC_CON_UNI_JAVA_SOAP</exec.mainClass>
+        <exec.mainClass>ec.edu.monster.App</exec.mainClass>
     </properties>
 </project>
