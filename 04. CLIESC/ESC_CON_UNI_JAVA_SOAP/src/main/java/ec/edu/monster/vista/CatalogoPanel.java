@@ -91,12 +91,13 @@ public class CatalogoPanel extends JPanel implements CatalogoVista {
 
     @Override
     public void mostrarMagnitudes(List<String> magnitudes) {
+        List<String> copia = List.copyOf(magnitudes);
         // Snapshot set synchronously: the controller reads it right after this call.
-        magnitudActual = magnitudes.isEmpty() ? null : magnitudes.get(0);
+        magnitudActual = copia.isEmpty() ? null : copia.get(0);
         Estilos.enEdt(() -> {
             actualizando = true;
-            listaMagnitudes.setListData(magnitudes.toArray(String[]::new));
-            if (!magnitudes.isEmpty()) {
+            listaMagnitudes.setListData(copia.toArray(String[]::new));
+            if (!copia.isEmpty()) {
                 listaMagnitudes.setSelectedIndex(0);
             }
             actualizando = false;

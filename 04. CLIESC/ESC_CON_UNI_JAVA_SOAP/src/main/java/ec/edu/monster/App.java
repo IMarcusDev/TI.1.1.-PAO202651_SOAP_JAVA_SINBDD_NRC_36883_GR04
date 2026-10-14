@@ -52,8 +52,11 @@ public final class App {
     private void mostrarPrincipal() {
         // The frame disposes itself after this callback runs.
         PrincipalFrame principal = new PrincipalFrame(() -> {
-            servicio.cerrarSesion();
-            mostrarLogin();
+            try {
+                servicio.cerrarSesion();
+            } finally {
+                mostrarLogin();
+            }
         });
         new ConversionControlador(principal.getConversionPanel(), servicio);
         new CatalogoControlador(principal.getCatalogoPanel(), servicio);

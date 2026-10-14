@@ -129,7 +129,7 @@ public class ConversionPanel extends JPanel implements ConversionVista {
             return;
         }
         magnitudActual = seleccion(comboCategoria);
-        Estilos.enSegundoPlano(accionCambiarMagnitud, this::mostrarError, comboCategoria, botonConvertir);
+        enSegundoPlano(accionCambiarMagnitud);
     }
 
     private void convertir() {
@@ -140,7 +140,14 @@ public class ConversionPanel extends JPanel implements ConversionVista {
         valorActual = campoValor.getText();
         origenActual = seleccion(comboDesde);
         destinoActual = seleccion(comboHacia);
-        Estilos.enSegundoPlano(accionConvertir, this::mostrarError, botonConvertir);
+        enSegundoPlano(accionConvertir);
+    }
+
+    // Every input stays locked while a worker runs, so no second worker can
+    // start and overwrite the snapshots the running one reads.
+    private void enSegundoPlano(Runnable accion) {
+        Estilos.enSegundoPlano(accion, this::mostrarError,
+                comboCategoria, comboDesde, comboHacia, campoValor, botonConvertir);
     }
 
     private static String seleccion(JComboBox<String> combo) {
@@ -149,11 +156,12 @@ public class ConversionPanel extends JPanel implements ConversionVista {
 
     @Override
     public void mostrarMagnitudes(List<String> magnitudes) {
+        List<String> copia = List.copyOf(magnitudes);
         // Snapshot set synchronously: the controller reads it right after this call.
-        magnitudActual = magnitudes.isEmpty() ? null : magnitudes.get(0);
+        magnitudActual = copia.isEmpty() ? null : copia.get(0);
         Estilos.enEdt(() -> {
             actualizando = true;
-            comboCategoria.setModel(new DefaultComboBoxModel<>(magnitudes.toArray(String[]::new)));
+            comboCategoria.setModel(new DefaultComboBoxModel<>(copia.toArray(String[]::new)));
             actualizando = false;
         });
     }

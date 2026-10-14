@@ -26,8 +26,11 @@ public class PrincipalFrame extends JFrame {
 
         JButton botonCerrarSesion = Estilos.botonPrimario("Cerrar sesión");
         botonCerrarSesion.addActionListener(e -> {
-            alCerrarSesion.run();
-            dispose();
+            try {
+                alCerrarSesion.run();
+            } finally {
+                dispose();
+            }
         });
         JPanel barraSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
         barraSuperior.setBackground(Estilos.FONDO);
