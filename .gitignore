@@ -1,4 +1,7 @@
 /04. SERVIDOR/WS_CON_UNI_JAVA_SOAP/target/
+
+/04. CLIESC/ESC_CON_UNI_JAVA_SOAP/target/
+
 /04. CLICON/CONSOLE_CON_UNI_JAVA_SOAP/target/
 
 # Claude Code: local state and personal settings
@@ -14,6 +17,7 @@
 .atl/
 .gentle-ai/
 .pi/gentle-ai/
+odd/
 
 # CodeGraph: per-worktree SQLite index (rebuilt by `codegraph init`)
 .codegraph/
