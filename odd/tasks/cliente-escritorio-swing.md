@@ -37,7 +37,13 @@ Strategy: ask-on-risk. Forecast ~600 authored lines → chain decision asked bef
 ## Progress
 - Baseline: `mvn -o test` green (FormatoResultadoTest, 2 tests) on 2026-10-13.
 
-- T1: RED observed (missing Sesion/ConversorServicio/ServicioException), then GREEN `mvn -o test` 13/13 (ConversorServicioTest 8, SesionTest 3, FormatoResultadoTest 2). Server failures (`WebServiceException`) map to "No se pudo conectar con el servidor"; ERROR states surface the server `mensaje`.
+- T1: RED observed (missing Sesion/ConversorServicio/ServicioException), then GREEN `mvn -o test` 13/13 (ConversorServicioTest 8, SesionTest 3, FormatoResultadoTest 2). Commit `1e2c1b9` on `feat/cliente-escritorio-swing`. Review: medium risk, consent granted, reliability lens approved and acknowledged (lineage review-e8dcd227848df616). Non-blocking follow-ups: login OK with null token should fail; `SOAPFaultException` is a `WebServiceException` and gets mislabeled as "no connection".
+
+## Follow-ups
+- [x] F1 Reject login OK without token; map `SOAPFaultException` to its fault message instead of "No se pudo conectar con el servidor". Tests first. RED observed (2 failures), GREEN 15/15. Also pinned `FormatoResultado` symbols to `Locale.ROOT` (review suggestion) and fixed typos in user comments in `Sesion`.
+
+## Design notes (agreed)
+- Controllers depend on view interfaces (`LoginVista`, ...), not on `JFrame`, so they are tested with fake views and a `ConversorServicio` built over fake stubs. Controllers come before Swing views.
 
 ## Next step
 T2 smoke test against the running server, then T3 views.

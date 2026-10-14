@@ -2,10 +2,11 @@ package ec.edu.monster.modelo;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 public final class FormatoResultado {
 
-    private static final DecimalFormatSymbols SYMBOLS = new DecimalFormatSymbols();
+    private static final DecimalFormatSymbols SYMBOLS = DecimalFormatSymbols.getInstance(Locale.ROOT);
 
     static {
         SYMBOLS.setDecimalSeparator(',');

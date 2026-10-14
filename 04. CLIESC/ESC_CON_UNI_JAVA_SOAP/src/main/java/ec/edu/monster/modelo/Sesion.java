@@ -1,7 +1,9 @@
 package ec.edu.monster.modelo;
-
+/*
+Clase para guardar el estado de la sesión: inicio, estado activo y cierre
+*/
 public class Sesion {
-
+    
     private String usuario;
     private String token;
 

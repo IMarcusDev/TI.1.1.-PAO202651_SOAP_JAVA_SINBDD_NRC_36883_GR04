@@ -13,8 +13,14 @@ import ec.edu.monster.ws.conversor.ConversorWebService;
 import ec.edu.monster.ws.conversor.ConverterDTO;
 import ec.edu.monster.ws.login.LoginDTO;
 import ec.edu.monster.ws.login.LoginWebService;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFactory;
+import jakarta.xml.soap.SOAPFault;
 import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import java.util.List;
+import javax.xml.namespace.QName;
 import org.junit.jupiter.api.Test;
 
 class ConversorServicioTest {
@@ -97,6 +103,33 @@ class ConversorServicioTest {
                 () -> servicio.iniciarSesion("user", "1234"));
 
         assertEquals("No se pudo conectar con el servidor", error.getMessage());
+    }
+
+    @Test
+    void rejectsSuccessfulLoginWithoutToken() {
+        ConversorServicio servicio = new ConversorServicio(
+                (usuario, clave) -> loginOk(null), new ConversorFalso(), sesion);
+
+        ServicioException error = assertThrows(ServicioException.class,
+                () -> servicio.iniciarSesion("user", "1234"));
+
+        assertEquals("El servidor no devolvió un token de sesión", error.getMessage());
+        assertFalse(sesion.estaActiva());
+    }
+
+    @Test
+    void reportsSoapFaultMessageInsteadOfConnectionError() throws SOAPException {
+        SOAPFault fault = SOAPFactory.newInstance().createFault("Error interno del servidor",
+                new QName(SOAPConstants.URI_NS_SOAP_ENVELOPE, "Server"));
+        ConversorServicio servicio = new ConversorServicio(
+                (usuario, clave) -> {
+                    throw new SOAPFaultException(fault);
+                }, new ConversorFalso(), sesion);
+
+        ServicioException error = assertThrows(ServicioException.class,
+                () -> servicio.iniciarSesion("user", "1234"));
+
+        assertEquals("Error interno del servidor", error.getMessage());
     }
 
     @Test

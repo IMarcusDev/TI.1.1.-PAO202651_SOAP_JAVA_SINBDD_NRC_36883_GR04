@@ -8,6 +8,7 @@ import ec.edu.monster.ws.login.LoginDTO;
 import ec.edu.monster.ws.login.LoginWebService;
 import ec.edu.monster.ws.login.LoginWebService_Service;
 import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -20,6 +21,7 @@ public class ConversorServicio {
     private static final String SIN_CONEXION = "No se pudo conectar con el servidor";
     private static final String SIN_SESION = "La sesión no está activa";
     private static final String SIN_RESPUESTA = "El servidor no devolvió una respuesta";
+    private static final String SIN_TOKEN = "El servidor no devolvió un token de sesión";
 
     private final LoginWebService login;
     private final ConversorWebService conversor;
@@ -45,6 +47,9 @@ public class ConversorServicio {
         }
         if (respuesta.getEstado() != ec.edu.monster.ws.login.EstadosEnum.OK) {
             throw new ServicioException(respuesta.getMensaje());
+        }
+        if (respuesta.getToken() == null || respuesta.getToken().isBlank()) {
+            throw new ServicioException(SIN_TOKEN);
         }
         sesion.iniciar(usuario, respuesta.getToken());
     }
@@ -89,6 +94,9 @@ public class ConversorServicio {
     private static <T> T llamar(Supplier<T> llamada) throws ServicioException {
         try {
             return llamada.get();
+        } catch (SOAPFaultException e) {
+            // The server answered with a fault: show its message, not a connection error.
+            throw new ServicioException(e.getFault().getFaultString(), e);
         } catch (WebServiceException e) {
             throw new ServicioException(SIN_CONEXION, e);
         }
