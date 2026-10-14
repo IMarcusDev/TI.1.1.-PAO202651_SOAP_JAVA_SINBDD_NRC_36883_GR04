@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ReglaVista">
+        <attr name="colorMarca" format="color" />
+        <attr name="mostrarNumeros" format="boolean" />
+    </declare-styleable>
+</resources>

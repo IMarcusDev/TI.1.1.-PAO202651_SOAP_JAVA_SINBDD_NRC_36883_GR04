@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import ec.edu.monster.R;
-import ec.edu.monster.modelo.AutenticacionServicio;
-import ec.edu.monster.modelo.ServicioException;
-import ec.edu.monster.modelo.soap.AutenticacionSoapCliente;
-import ec.edu.monster.modelo.soap.SoapTransporte;
+import ec.edu.monster.modelos.excepciones.SoapException;
+import ec.edu.monster.modelos.interfaces.AutenticacionRepositorio;
+import ec.edu.monster.modelos.repositorios.AutenticacionSoapRepositorio;
+import ec.edu.monster.modelos.soap.SoapTransporte;
 import ec.edu.monster.vista.LoginVista;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,7 +18,7 @@ public class LoginActivity extends Activity {
 
     private final ExecutorService ejecutor = Executors.newSingleThreadExecutor();
     private LoginVista vista;
-    private AutenticacionServicio servicio;
+    private AutenticacionRepositorio repositorio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class LoginActivity extends Activity {
 
         vista = new LoginVista(this);
         String urlBase = getString(R.string.url_servidor);
-        servicio = new AutenticacionSoapCliente(urlBase + "/LoginWebService", new SoapTransporte());
+        repositorio = new AutenticacionSoapRepositorio(urlBase + "/LoginWebService", new SoapTransporte());
 
         vista.alPresionarIngresar(this::iniciarSesion);
     }
@@ -46,13 +46,13 @@ public class LoginActivity extends Activity {
 
         ejecutor.execute(() -> {
             try {
-                String token = servicio.iniciarSesion(usuario, clave);
+                String token = repositorio.iniciarSesion(usuario, clave);
                 runOnUiThread(() -> {
                     if (!isFinishing()) {
                         abrirConvertidor(token);
                     }
                 });
-            } catch (ServicioException e) {
+            } catch (SoapException e) {
                 runOnUiThread(() -> {
                     if (!isFinishing()) {
                         vista.mostrarCargando(false);

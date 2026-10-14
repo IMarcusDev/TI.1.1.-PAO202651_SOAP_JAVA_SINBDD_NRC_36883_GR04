@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import ec.edu.monster.modelo.ServicioException;
-import ec.edu.monster.modelo.soap.SoapLectorRespuesta;
+import ec.edu.monster.modelos.excepciones.SoapException;
+import ec.edu.monster.modelos.soap.SoapLectorRespuesta;
 import java.util.Arrays;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class SoapLectorRespuestaTest {
     }
 
     @Test
-    public void texto_respuestaDeConversion_leeLosCampos() throws ServicioException {
+    public void texto_respuestaDeConversion_leeLosCampos() throws SoapException {
         String xml = sobre(
               "<ns2:convertResponse xmlns:ns2=\"http://ws.monster.edu.ec/\"><return>"
             + "<estado>OK</estado><mensaje>Conversión Exitosa</mensaje><resultado>0.25</resultado>"
@@ -33,7 +33,7 @@ public class SoapLectorRespuestaTest {
     }
 
     @Test
-    public void textos_respuestaDeCatalogo_devuelveTodasLasUnidadesEnOrden() throws ServicioException {
+    public void textos_respuestaDeCatalogo_devuelveTodasLasUnidadesEnOrden() throws SoapException {
         String xml = sobre(
               "<ns2:catalogResponse xmlns:ns2=\"http://ws.monster.edu.ec/\"><return>"
             + "<estado>OK</estado><resultado><unidad>m3</unidad><unidad>L</unidad><unidad>gal</unidad></resultado>"
@@ -45,7 +45,7 @@ public class SoapLectorRespuestaTest {
     }
 
     @Test
-    public void texto_elementoInexistente_devuelveNull() throws ServicioException {
+    public void texto_elementoInexistente_devuelveNull() throws SoapException {
         SoapLectorRespuesta lector = new SoapLectorRespuesta(sobre("<vacio/>"));
 
         assertNull(lector.texto("resultado"));
@@ -56,7 +56,7 @@ public class SoapLectorRespuestaTest {
         String xml = sobre("<S:Fault><faultcode>S:Server</faultcode>"
                          + "<faultstring>Error interno del servidor</faultstring></S:Fault>");
 
-        ServicioException error = assertThrows(ServicioException.class,
+        SoapException error = assertThrows(SoapException.class,
                 () -> new SoapLectorRespuesta(xml));
 
         assertTrue(error.getMessage().contains("Error interno del servidor"));
@@ -64,7 +64,7 @@ public class SoapLectorRespuestaTest {
 
     @Test
     public void constructor_textoQueNoEsXml_lanzaExcepcionConservandoLaCausa() {
-        ServicioException error = assertThrows(ServicioException.class,
+        SoapException error = assertThrows(SoapException.class,
                 () -> new SoapLectorRespuesta("Not Found"));
 
         assertNotNull(error.getCause());

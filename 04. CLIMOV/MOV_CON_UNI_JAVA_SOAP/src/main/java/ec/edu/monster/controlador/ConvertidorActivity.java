@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import ec.edu.monster.R;
-import ec.edu.monster.modelo.Conversion;
-import ec.edu.monster.modelo.ConvertidorServicio;
-import ec.edu.monster.modelo.Magnitud;
-import ec.edu.monster.modelo.ServicioException;
-import ec.edu.monster.modelo.soap.ConvertidorSoapCliente;
-import ec.edu.monster.modelo.soap.SoapTransporte;
+import ec.edu.monster.modelos.data.Conversion;
+import ec.edu.monster.modelos.enums.Magnitud;
+import ec.edu.monster.modelos.excepciones.SoapException;
+import ec.edu.monster.modelos.interfaces.ConvertidorRepositorio;
+import ec.edu.monster.modelos.repositorios.ConvertidorSoapRepositorio;
+import ec.edu.monster.modelos.soap.SoapTransporte;
 import ec.edu.monster.vista.ConvertidorVista;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ public class ConvertidorActivity extends Activity {
 
     private final ExecutorService ejecutor = Executors.newSingleThreadExecutor();
     private ConvertidorVista vista;
-    private ConvertidorServicio servicio;
+    private ConvertidorRepositorio repositorio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class ConvertidorActivity extends Activity {
         vista = new ConvertidorVista(this);
 
         String urlBase = getString(R.string.url_servidor);
-        servicio = new ConvertidorSoapCliente(urlBase + "/ConversorWebService", token, new SoapTransporte());
+        repositorio = new ConvertidorSoapRepositorio(urlBase + "/ConversorWebService", token, new SoapTransporte());
 
         vista.alCambiarMagnitud(this::cargarUnidades);
         vista.alPresionarConvertir(this::convertir);
@@ -53,12 +53,12 @@ public class ConvertidorActivity extends Activity {
 
         ejecutor.execute(() -> {
             try {
-                List<String> unidades = servicio.obtenerUnidades(magnitud);
+                List<String> unidades = repositorio.obtenerUnidades(magnitud);
                 enHiloPrincipal(() -> {
                     vista.mostrarUnidades(unidades);
                     vista.mostrarCargando(false);
                 });
-            } catch (ServicioException e) {
+            } catch (SoapException e) {
                 enHiloPrincipal(() -> {
                     vista.mostrarCargando(false);
                     vista.mostrarError(e.getMessage());
@@ -88,12 +88,12 @@ public class ConvertidorActivity extends Activity {
 
         ejecutor.execute(() -> {
             try {
-                Conversion resultado = servicio.convertir(conversion);
+                Conversion resultado = repositorio.convertir(conversion);
                 enHiloPrincipal(() -> {
                     vista.mostrarCargando(false);
-                    vista.mostrarResultado(describir(resultado));
+                    vista.mostrarResultado(formatear(resultado.getResultado()), describir(resultado));
                 });
-            } catch (ServicioException e) {
+            } catch (SoapException e) {
                 enHiloPrincipal(() -> {
                     vista.mostrarCargando(false);
                     vista.mostrarError(e.getMessage());
@@ -103,11 +103,15 @@ public class ConvertidorActivity extends Activity {
     }
 
     private String describir(Conversion conversion) {
+        return getString(R.string.conv_resultado,
+                formatear(conversion.getValor()), conversion.getUnidadOrigen(),
+                formatear(conversion.getResultado()), conversion.getUnidadDestino());
+    }
+
+    private static String formatear(double numero) {
         NumberFormat formato = NumberFormat.getInstance();
         formato.setMaximumFractionDigits(6);
-        return getString(R.string.conv_resultado,
-                formato.format(conversion.getValor()), conversion.getUnidadOrigen(),
-                formato.format(conversion.getResultado()), conversion.getUnidadDestino());
+        return formato.format(numero);
     }
 
     private void enHiloPrincipal(Runnable accion) {

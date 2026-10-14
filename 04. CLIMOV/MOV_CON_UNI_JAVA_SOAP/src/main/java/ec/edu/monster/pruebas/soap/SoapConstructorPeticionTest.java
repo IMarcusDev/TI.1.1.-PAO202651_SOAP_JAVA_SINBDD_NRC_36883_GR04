@@ -3,7 +3,7 @@ package ec.edu.monster.pruebas.soap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import ec.edu.monster.modelo.soap.SoapConstructorPeticion;
+import ec.edu.monster.modelos.soap.SoapConstructorPeticion;
 import java.util.Locale;
 import org.junit.Test;
 
