@@ -23,6 +23,9 @@ public interface ConversionVista {
 
     void mostrarError(String mensaje);
 
+    /** Hides any previous result and error before a new action. */
+    void limpiarMensajes();
+
     void alConvertir(Runnable accion);
 
     void alCambiarMagnitud(Runnable accion);

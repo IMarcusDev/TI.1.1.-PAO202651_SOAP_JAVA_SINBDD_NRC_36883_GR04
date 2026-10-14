@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class ConversionControladorTest {
 
@@ -66,10 +68,11 @@ class ConversionControladorTest {
         assertNull(vista.error);
     }
 
-    @Test
-    void rejectsNonNumericValueWithoutCallingServer() {
+    @ParameterizedTest
+    @ValueSource(strings = {"abc", "", "   ", "NaN", "Infinity", "2d", "2f", "0x1p3", "1e3", "1,2,3", "1.2.3", "5."})
+    void rejectsInvalidValuesWithoutCallingServer(String entrada) {
         crearControlador();
-        vista.valor = "abc";
+        vista.valor = entrada;
         vista.origen = "m2";
         vista.destino = "ha";
 
@@ -77,6 +80,76 @@ class ConversionControladorTest {
 
         assertEquals("Ingrese un valor numérico válido", vista.error);
         assertEquals(0, conversor.conversiones);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"10", "-3", "+4", "2.5", "2,5", " 7 ", ".5"})
+    void acceptsPlainDecimalNumbers(String entrada) {
+        crearControlador();
+        vista.valor = entrada;
+        vista.origen = "m2";
+        vista.destino = "ha";
+
+        vista.presionarConvertir();
+
+        assertNull(vista.error);
+        assertEquals(1, conversor.conversiones);
+    }
+
+    @Test
+    void asksForUnitsWhenOnlyOriginIsSelected() {
+        crearControlador();
+        vista.valor = "10";
+        vista.origen = "m2";
+
+        vista.presionarConvertir();
+
+        assertEquals("Seleccione la unidad de origen y de destino", vista.error);
+        assertEquals(0, conversor.conversiones);
+    }
+
+    @Test
+    void failedConversionClearsPreviousResult() {
+        crearControlador();
+        vista.valor = "1";
+        vista.origen = "m2";
+        vista.destino = "ha";
+        vista.presionarConvertir();
+        conversor.resultado = conversionError("Unidad no soportada");
+
+        vista.presionarConvertir();
+
+        assertNull(vista.resultado);
+        assertEquals("Unidad no soportada", vista.error);
+    }
+
+    @Test
+    void successfulConversionClearsPreviousError() {
+        crearControlador();
+        vista.valor = "abc";
+        vista.presionarConvertir();
+        vista.valor = "1";
+        vista.origen = "m2";
+        vista.destino = "ha";
+
+        vista.presionarConvertir();
+
+        assertNull(vista.error);
+        assertEquals("1 m2 = 0,0000 ha", vista.resultado);
+    }
+
+    @Test
+    void changingMagnitudeClearsPreviousResult() {
+        crearControlador();
+        vista.valor = "1";
+        vista.origen = "m2";
+        vista.destino = "ha";
+        vista.presionarConvertir();
+
+        vista.seleccionarMagnitud("Longitud");
+
+        assertNull(vista.resultado);
+        assertNull(vista.error);
     }
 
     @Test
@@ -207,6 +280,12 @@ class ConversionControladorTest {
         @Override
         public void mostrarError(String mensaje) {
             error = mensaje;
+        }
+
+        @Override
+        public void limpiarMensajes() {
+            resultado = null;
+            error = null;
         }
 
         @Override

@@ -6,6 +6,7 @@ import ec.edu.monster.modelo.Magnitudes;
 import ec.edu.monster.modelo.ServicioException;
 import ec.edu.monster.vista.ConversionVista;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Handles the conversion screen: loads the units of the selected magnitude,
@@ -15,6 +16,8 @@ public class ConversionControlador {
 
     private static final String VALOR_INVALIDO = "Ingrese un valor numérico válido";
     private static final String SIN_UNIDADES = "Seleccione la unidad de origen y de destino";
+    // Optional sign, digits and at most one decimal separator ("." or ","). No exponents or suffixes.
+    private static final Pattern NUMERO = Pattern.compile("[+-]?(\\d+([.,]\\d+)?|[.,]\\d+)");
 
     private final ConversionVista vista;
     private final ConversorServicio servicio;
@@ -29,6 +32,7 @@ public class ConversionControlador {
     }
 
     private void cargarUnidades() {
+        vista.limpiarMensajes();
         String magnitud = vista.getMagnitud();
         if (magnitud == null) {
             return;
@@ -43,6 +47,7 @@ public class ConversionControlador {
     }
 
     private void convertir() {
+        vista.limpiarMensajes();
         Double valor = leerValor(vista.getValor());
         if (valor == null) {
             vista.mostrarError(VALOR_INVALIDO);
@@ -62,16 +67,12 @@ public class ConversionControlador {
         }
     }
 
-    // Accepts both "2.5" and "2,5"; returns null for anything that is not a finite number.
+    // Accepts plain decimals such as "2.5" or "2,5"; returns null for anything else.
     private static Double leerValor(String texto) {
-        if (texto == null || texto.isBlank()) {
+        if (texto == null || !NUMERO.matcher(texto.trim()).matches()) {
             return null;
         }
-        try {
-            double valor = Double.parseDouble(texto.trim().replace(',', '.'));
-            return Double.isFinite(valor) ? valor : null;
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        double valor = Double.parseDouble(texto.trim().replace(',', '.'));
+        return Double.isFinite(valor) ? valor : null;
     }
 }
