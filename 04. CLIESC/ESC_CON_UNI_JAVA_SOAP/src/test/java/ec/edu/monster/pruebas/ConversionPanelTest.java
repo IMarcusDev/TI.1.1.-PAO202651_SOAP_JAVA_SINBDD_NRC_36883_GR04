@@ -2,7 +2,6 @@ package ec.edu.monster.pruebas;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import ec.edu.monster.vista.ConversionPanel;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
@@ -83,17 +83,23 @@ class ConversionPanelTest {
     }
 
     @Test
-    void programmaticFillsDoNotFireTheMagnitudeAction() throws Exception {
+    void showingMagnitudesNotifiesTheFirstOnceOffTheEdtAndUnitFillsDoNot() throws Exception {
         AtomicInteger disparos = new AtomicInteger();
-        panel.alCambiarMagnitud(disparos::incrementAndGet);
+        AtomicBoolean enHiloEdt = new AtomicBoolean();
+        panel.alCambiarMagnitud(() -> {
+            enHiloEdt.set(SwingUtilities.isEventDispatchThread());
+            disparos.incrementAndGet();
+        });
 
         enEdt(() -> {
             panel.mostrarMagnitudes(List.of("Longitud", "Masa"));
             panel.mostrarUnidades(List.of("m", "km", "cm"));
         });
+        esperarHasta(this::todosHabilitados);
 
-        assertTrue(enEdt(comboCategoria::isEnabled), "no background action must have started");
-        assertEquals(0, disparos.get());
+        assertEquals(1, disparos.get());
+        assertFalse(enHiloEdt.get(), "the initial load must run off the EDT");
+        assertEquals("Longitud", panel.getMagnitud());
     }
 
     @Test
@@ -109,6 +115,8 @@ class ConversionPanelTest {
     @Test
     void locksEveryInputWhileAConversionRunsAndUnlocksAfterwards() throws Exception {
         enEdt(() -> panel.mostrarMagnitudes(List.of("Longitud", "Masa")));
+        // Let the initial magnitude notification finish before acting.
+        esperarHasta(this::todosHabilitados);
         CountDownLatch iniciada = new CountDownLatch(1);
         CountDownLatch soltar = new CountDownLatch(1);
         panel.alConvertir(() -> {
@@ -127,6 +135,8 @@ class ConversionPanelTest {
     @Test
     void locksEveryInputWhileUnitsOfANewMagnitudeLoad() throws Exception {
         enEdt(() -> panel.mostrarMagnitudes(List.of("Longitud", "Masa")));
+        // Let the initial magnitude notification finish before acting.
+        esperarHasta(this::todosHabilitados);
         CountDownLatch iniciada = new CountDownLatch(1);
         CountDownLatch soltar = new CountDownLatch(1);
         panel.alCambiarMagnitud(() -> {

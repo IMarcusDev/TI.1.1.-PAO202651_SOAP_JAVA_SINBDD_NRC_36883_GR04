@@ -39,6 +39,15 @@ class CatalogoControladorTest {
     }
 
     @Test
+    void loadsUnitsExactlyOnceOnStart() {
+        conversor.unidades = List.of("m", "cm", "ft");
+
+        crearControlador();
+
+        assertEquals(1, conversor.pedidos.size());
+    }
+
+    @Test
     void showsUnitsOfTheNewlySelectedMagnitude() {
         crearControlador();
         conversor.unidades = List.of("s", "min", "h");
@@ -109,7 +118,11 @@ class CatalogoControladorTest {
         @Override
         public void mostrarMagnitudes(List<String> lista) {
             magnitudes = lista;
-            magnitud = lista.getFirst();
+            magnitud = lista.isEmpty() ? null : lista.getFirst();
+            // Mirrors the view contract: the first magnitude is notified like a user selection.
+            if (accionCambiarMagnitud != null && !lista.isEmpty()) {
+                accionCambiarMagnitud.run();
+            }
         }
 
         @Override

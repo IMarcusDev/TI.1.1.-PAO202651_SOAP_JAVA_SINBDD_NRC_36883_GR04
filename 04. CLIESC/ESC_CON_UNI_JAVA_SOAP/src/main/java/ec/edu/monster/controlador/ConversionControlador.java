@@ -28,8 +28,8 @@ public class ConversionControlador {
         this.servicio = servicio;
         vista.alCambiarMagnitud(this::cargarUnidades);
         vista.alConvertir(this::convertir);
+        // The view notifies the first magnitude in the background, loading its units.
         vista.mostrarMagnitudes(Magnitudes.TODAS);
-        cargarUnidades();
     }
 
     private void cargarUnidades() {

@@ -174,6 +174,9 @@ public class ConversionPanel extends JPanel implements ConversionVista {
             actualizando = true;
             comboCategoria.setModel(new DefaultComboBoxModel<>(copia.toArray(String[]::new)));
             actualizando = false;
+            if (accionCambiarMagnitud != null && !copia.isEmpty()) {
+                enSegundoPlano(accionCambiarMagnitud);
+            }
         });
     }
 
