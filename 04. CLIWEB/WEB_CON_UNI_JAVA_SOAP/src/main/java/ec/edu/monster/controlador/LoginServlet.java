@@ -19,7 +19,7 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
 
     private static final String CREDENCIALES_VACIAS = "Ingrese usuario y contraseña";
-    private static final String VISTA = "/WEB-INF/vistas/login.jsp";
+    private static final String VISTA = "/ec/edu/monster/vista/login.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

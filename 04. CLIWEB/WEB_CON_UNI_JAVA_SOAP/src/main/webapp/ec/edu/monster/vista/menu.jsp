@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
 <body>
-<%@ include file="/WEB-INF/vistas/fragmentos/cabecera.jspf" %>
+<%@ include file="/ec/edu/monster/vista/fragmentos/cabecera.jspf" %>
 <main class="contenido">
     <h1>Menú principal</h1>
     <div class="opciones-menu">

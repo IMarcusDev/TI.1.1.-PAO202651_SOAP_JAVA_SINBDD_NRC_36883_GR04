@@ -16,7 +16,7 @@ import java.util.List;
 @WebServlet("/catalogo")
 public class CatalogoServlet extends HttpServlet {
 
-    private static final String VISTA = "/WEB-INF/vistas/catalogo.jsp";
+    private static final String VISTA = "/ec/edu/monster/vista/catalogo.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

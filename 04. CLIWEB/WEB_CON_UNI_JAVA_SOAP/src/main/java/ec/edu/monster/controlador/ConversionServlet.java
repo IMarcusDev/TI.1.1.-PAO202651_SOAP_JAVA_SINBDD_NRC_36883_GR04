@@ -19,7 +19,7 @@ import java.util.List;
 @WebServlet("/conversion")
 public class ConversionServlet extends HttpServlet {
 
-    private static final String VISTA = "/WEB-INF/vistas/conversion.jsp";
+    private static final String VISTA = "/ec/edu/monster/vista/conversion.jsp";
     private static final String CAMBIAR_MAGNITUD = "cambiar";
 
     @Override

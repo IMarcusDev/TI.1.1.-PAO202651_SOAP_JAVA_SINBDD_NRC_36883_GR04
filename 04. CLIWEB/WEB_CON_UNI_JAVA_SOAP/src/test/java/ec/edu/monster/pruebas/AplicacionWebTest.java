@@ -40,7 +40,7 @@ class AplicacionWebTest {
 
         web.call(new MenuServlet(), "GET");
 
-        assertEquals("/WEB-INF/vistas/menu.jsp", web.forwardedTo);
+        assertEquals("/ec/edu/monster/vista/menu.jsp", web.forwardedTo);
         verify(web.dispatcher).forward(any(), any());
     }
 }
