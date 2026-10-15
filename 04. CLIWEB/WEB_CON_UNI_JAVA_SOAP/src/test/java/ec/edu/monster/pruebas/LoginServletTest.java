@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 
 class LoginServletTest {
 
-    private static final String VIEW = "/WEB-INF/vistas/login.jsp";
+    private static final String VIEW = "/ec/edu/monster/vista/login.jsp";
 
     private final WebFixture web = new WebFixture();
     private final FabricaServicios factory = mock(FabricaServicios.class);

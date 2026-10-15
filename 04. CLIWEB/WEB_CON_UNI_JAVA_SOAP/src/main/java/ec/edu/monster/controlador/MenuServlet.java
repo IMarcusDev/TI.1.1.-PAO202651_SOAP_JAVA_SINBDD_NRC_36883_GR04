@@ -16,6 +16,6 @@ public class MenuServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/vistas/menu.jsp").forward(request, response);
+        request.getRequestDispatcher("/ec/edu/monster/vista/menu.jsp").forward(request, response);
     }
 }

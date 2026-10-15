@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
 <body>
-<%@ include file="/WEB-INF/vistas/fragmentos/cabecera.jspf" %>
+<%@ include file="/ec/edu/monster/vista/fragmentos/cabecera.jspf" %>
 <main class="contenido">
     <h1>Convertir unidades</h1>
     <c:if test="${not empty error}">

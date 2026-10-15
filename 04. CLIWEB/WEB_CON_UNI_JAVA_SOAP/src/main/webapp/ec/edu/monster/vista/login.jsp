@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilos.css">
 </head>
 <body>
-<%@ include file="/WEB-INF/vistas/fragmentos/cabecera.jspf" %>
+<%@ include file="/ec/edu/monster/vista/fragmentos/cabecera.jspf" %>
 <main class="contenido-centrado">
     <section class="tarjeta tarjeta-login">
         <h1>Iniciar sesión</h1>

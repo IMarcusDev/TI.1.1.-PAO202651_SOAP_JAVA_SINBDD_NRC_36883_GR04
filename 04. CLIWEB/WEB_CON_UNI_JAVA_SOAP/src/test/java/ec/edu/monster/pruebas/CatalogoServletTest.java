@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class CatalogoServletTest {
 
-    private static final String VIEW = "/WEB-INF/vistas/catalogo.jsp";
+    private static final String VIEW = "/ec/edu/monster/vista/catalogo.jsp";
 
     private final WebFixture web = new WebFixture();
 

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class ConversionServletTest {
 
-    private static final String VIEW = "/WEB-INF/vistas/conversion.jsp";
+    private static final String VIEW = "/ec/edu/monster/vista/conversion.jsp";
 
     private final WebFixture web = new WebFixture();
 
