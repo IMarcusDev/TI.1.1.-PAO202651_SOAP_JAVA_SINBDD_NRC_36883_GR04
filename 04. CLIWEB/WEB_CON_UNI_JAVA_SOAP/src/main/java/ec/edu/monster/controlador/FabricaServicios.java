@@ -6,6 +6,12 @@ import ec.edu.monster.modelo.Sesion;
 import ec.edu.monster.ws.conversor.ConversorWebService_Service;
 import ec.edu.monster.ws.login.LoginWebService_Service;
 import jakarta.servlet.ServletContext;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
 
 /**
  * Application-scoped holder of the WSDL-backed services. They are expensive,
@@ -15,9 +21,23 @@ public class FabricaServicios {
 
     static final String ATRIBUTO = FabricaServicios.class.getName();
     private static final String SIN_CONEXION = "No se pudo conectar con el servidor";
+    private static final URI WSDL_CONVERSOR =
+            URI.create("http://localhost:8080/WS_CON_UNI_JAVA_SOAP/ConversorWebService?wsdl");
+    private static final Duration TIMEOUT = Duration.ofSeconds(2);
 
+    private final URI wsdl;
+    private final HttpClient cliente = HttpClient.newBuilder().connectTimeout(TIMEOUT).build();
     private LoginWebService_Service loginServicio;
     private ConversorWebService_Service conversorServicio;
+
+    public FabricaServicios() {
+        this(WSDL_CONVERSOR);
+    }
+
+    /** Points the availability check at the given WSDL address. */
+    public FabricaServicios(URI wsdl) {
+        this.wsdl = wsdl;
+    }
 
     public static FabricaServicios de(ServletContext contexto) {
         return (FabricaServicios) contexto.getAttribute(ATRIBUTO);
@@ -33,12 +53,19 @@ public class FabricaServicios {
         }
     }
 
-    /** True when the services could be built; tries again if a previous attempt failed. */
+    /**
+     * True when the server answers its WSDL right now. It asks the server on every call,
+     * because the services once built stay in memory even after the server goes down.
+     */
     public boolean disponible() {
+        HttpRequest peticion = HttpRequest.newBuilder(wsdl).timeout(TIMEOUT).GET().build();
         try {
-            cargarServicios();
-            return true;
-        } catch (ServicioException e) {
+            HttpResponse<Void> respuesta = cliente.send(peticion, HttpResponse.BodyHandlers.discarding());
+            return respuesta.statusCode() == 200;
+        } catch (IOException e) {
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return false;
         }
     }
