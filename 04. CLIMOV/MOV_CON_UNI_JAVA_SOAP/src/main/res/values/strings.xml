@@ -1,30 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Conversor de Unidades</string>
-
+    <string name="app_name">Conversor Monster SOAP</string>
     <string name="app_titulo">Conversión de Unidades Monster</string>
+    <string name="catalogo_titulo">Catálogo de Unidades</string>
+
+    <string name="pestana_conversion">Conversión</string>
+    <string name="pestana_catalogo">Catálogo</string>
+
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="cerrar_sesion_pregunta">¿Desea cerrar la sesión?</string>
+    <string name="si">Sí</string>
+    <string name="no">No</string>
+    <string name="sesion">Sesión</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="error_inesperado">Ocurrió un error inesperado. Intente de nuevo.</string>
+
     <string name="login_titulo">Iniciar sesión</string>
     <string name="login_usuario">Usuario</string>
     <string name="login_clave">Contraseña</string>
     <string name="login_ingresar">Ingresar</string>
-    <string name="error_campos_vacios">Ingrese su usuario y contraseña para continuar.</string>
 
-    <string name="conv_magnitud">¿Qué desea convertir?</string>
-    <string name="conv_desde">De</string>
-    <string name="conv_hacia">A</string>
-    <string name="conv_valor">0</string>
-    <string name="conv_convertir">Convertir</string>
-    <string name="conv_intercambiar">Intercambiar unidades</string>
-    <string name="conv_cerrar_sesion">Cerrar sesión</string>
+    <string name="conv_pregunta">¿Qué desea convertir?</string>
+    <string name="conv_convirtiendo">Convirtiendo: </string>
+    <string name="conv_de">De</string>
+    <string name="conv_a">A</string>
+    <string name="conv_placeholder">0</string>
+    <string name="conv_seleccione_unidad">Seleccione la unidad</string>
     <string name="conv_sin_resultado">—</string>
     <string name="conv_instruccion">Ingrese un valor y pulse Convertir.</string>
-    <string name="conv_resultado">%1$s %2$s = %3$s %4$s</string>
-    <string name="error_valor_invalido">Ingrese un valor numérico válido, por ejemplo 12,5.</string>
+    <string name="conv_cargando_unidades">Cargando unidades…</string>
+    <string name="conv_unidades_fallaron">No se pudieron cargar las unidades.</string>
+    <string name="conv_reintentar_unidades">Reintentar carga de unidades</string>
+    <string name="conv_convertir">Convertir</string>
+    <string name="conv_invertir">Invertir unidades</string>
+    <string name="conv_detalle">%1$s %2$s = %3$s %4$s</string>
 
-    <string name="mag_area">Área</string>
-    <string name="mag_longitud">Longitud</string>
-    <string name="mag_masa">Masa</string>
-    <string name="mag_temperatura">Temperatura</string>
-    <string name="mag_tiempo">Tiempo</string>
-    <string name="mag_volumen">Volumen</string>
+    <string name="cat_encabezado">Magnitudes disponibles</string>
+    <string name="cat_subtitulo">Toque una magnitud para ver sus unidades.</string>
+    <string name="cat_cargando">Cargando catálogo…</string>
+    <string name="cat_error_titulo">No se pudo cargar el catálogo</string>
+    <string name="cat_reintentar">Reintentar</string>
+    <string name="cat_vacio_titulo">No hay magnitudes para mostrar</string>
+    <string name="cat_vacio_detalle">Deslice hacia abajo para recargar el catálogo.</string>
+    <string name="cat_cantidad">%1$d unidades  ›</string>
+    <string name="cat_cantidad_disponibles">%1$d unidades disponibles</string>
+    <string name="cat_cerrar">Cerrar</string>
 </resources>

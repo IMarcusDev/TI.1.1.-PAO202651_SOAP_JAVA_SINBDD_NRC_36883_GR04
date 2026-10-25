@@ -1,14 +1,11 @@
-# Gradle
 .gradle/
 build/
 .kotlin/
 
-# Configuración local (ruta del SDK, claves)
 local.properties
 *.keystore
 *.jks
 
-# Salidas de Android
 *.apk
 *.aab
 *.ap_
@@ -17,7 +14,6 @@ captures/
 .externalNativeBuild/
 .cxx/
 
-# IDEs
 .idea/
 *.iml
 .vscode/
@@ -26,6 +22,5 @@ captures/
 .classpath
 bin/
 
-# Sistema operativo
 .DS_Store
 Thumbs.db

@@ -1,12 +1,14 @@
 package ec.edu.monster.pruebas.soap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
-import ec.edu.monster.modelos.excepciones.SoapException;
+import ec.edu.monster.modelos.excepciones.RespuestaInvalidaException;
+import ec.edu.monster.modelos.excepciones.SoapFallaException;
 import ec.edu.monster.modelos.soap.SoapLectorRespuesta;
 import java.util.Arrays;
 import org.junit.Test;
@@ -19,7 +21,7 @@ public class SoapLectorRespuestaTest {
     }
 
     @Test
-    public void texto_respuestaDeConversion_leeLosCampos() throws SoapException {
+    public void texto_respuestaDeConversion_leeLosCampos() throws Exception {
         String xml = sobre(
               "<ns2:convertResponse xmlns:ns2=\"http://ws.monster.edu.ec/\"><return>"
             + "<estado>OK</estado><mensaje>Conversión Exitosa</mensaje><resultado>0.25</resultado>"
@@ -27,13 +29,27 @@ public class SoapLectorRespuestaTest {
 
         SoapLectorRespuesta lector = new SoapLectorRespuesta(xml);
 
-        assertEquals("OK", lector.texto("estado"));
+        assertEquals("OK", lector.estado());
+        assertTrue(lector.estadoOk());
         assertEquals("Conversión Exitosa", lector.texto("mensaje"));
         assertEquals("0.25", lector.texto("resultado"));
     }
 
     @Test
-    public void textos_respuestaDeCatalogo_devuelveTodasLasUnidadesEnOrden() throws SoapException {
+    public void estadoOk_conEstadoError_esFalso() throws Exception {
+        SoapLectorRespuesta lector = new SoapLectorRespuesta(sobre("<return><estado>ERROR</estado></return>"));
+
+        assertFalse(lector.estadoOk());
+        assertEquals("ERROR", lector.estado());
+    }
+
+    @Test
+    public void estado_respuestaSinEstado_esNull() throws Exception {
+        assertNull(new SoapLectorRespuesta(sobre("<return/>")).estado());
+    }
+
+    @Test
+    public void textos_respuestaDeCatalogo_devuelveTodasLasUnidadesEnOrden() throws Exception {
         String xml = sobre(
               "<ns2:catalogResponse xmlns:ns2=\"http://ws.monster.edu.ec/\"><return>"
             + "<estado>OK</estado><resultado><unidad>m3</unidad><unidad>L</unidad><unidad>gal</unidad></resultado>"
@@ -45,28 +61,34 @@ public class SoapLectorRespuestaTest {
     }
 
     @Test
-    public void texto_elementoInexistente_devuelveNull() throws SoapException {
+    public void texto_elementoInexistente_devuelveNull() throws Exception {
         SoapLectorRespuesta lector = new SoapLectorRespuesta(sobre("<vacio/>"));
 
         assertNull(lector.texto("resultado"));
     }
 
     @Test
-    public void constructor_respuestaConFault_lanzaExcepcionConElMensaje() {
+    public void constructor_respuestaConFault_lanzaFallaConElFaultstring() {
         String xml = sobre("<S:Fault><faultcode>S:Server</faultcode>"
-                         + "<faultstring>Error interno del servidor</faultstring></S:Fault>");
+                         + "<faultstring>java.lang.NullPointerException</faultstring></S:Fault>");
 
-        SoapException error = assertThrows(SoapException.class,
+        SoapFallaException error = assertThrows(SoapFallaException.class,
                 () -> new SoapLectorRespuesta(xml));
 
-        assertTrue(error.getMessage().contains("Error interno del servidor"));
+        assertEquals("java.lang.NullPointerException", error.getMessage());
     }
 
     @Test
-    public void constructor_textoQueNoEsXml_lanzaExcepcionConservandoLaCausa() {
-        SoapException error = assertThrows(SoapException.class,
-                () -> new SoapLectorRespuesta("Not Found"));
+    public void constructor_textoQueNoEsXml_lanzaRespuestaInvalidaConservandoLaCausa() {
+        RespuestaInvalidaException error = assertThrows(RespuestaInvalidaException.class,
+                () -> new SoapLectorRespuesta("<html>Not Found"));
 
         assertNotNull(error.getCause());
+    }
+
+    @Test
+    public void constructor_cuerpoVacio_lanzaRespuestaInvalida() {
+        assertThrows(RespuestaInvalidaException.class, () -> new SoapLectorRespuesta("  "));
+        assertThrows(RespuestaInvalidaException.class, () -> new SoapLectorRespuesta(null));
     }
 }

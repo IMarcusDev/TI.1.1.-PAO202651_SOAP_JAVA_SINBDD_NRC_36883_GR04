@@ -7,11 +7,15 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = 'ec.espe.convertidor'
+        applicationId = 'com.espe.mov_con_uni_java_soap'
         minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = '1.0'
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     compileOptions {
@@ -27,8 +31,17 @@ android {
             java.srcDir('src/main/java/ec/edu/monster/pruebas')
         }
     }
+
+    testOptions {
+        unitTests.all {
+            systemProperty 'servidor', project.findProperty('servidor') ?: ''
+        }
+    }
 }
 
 dependencies {
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
     testImplementation 'junit:junit:4.13.2'
 }

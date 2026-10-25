@@ -1,34 +1,35 @@
 package ec.edu.monster.vista;
 
-import android.app.Activity;
-import android.graphics.Insets;
-import android.os.Build;
 import android.view.View;
-import android.view.WindowInsets;
-import ec.edu.monster.R;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 final class AjusteBordes {
 
     private AjusteBordes() { }
 
-    static void aplicar(Activity actividad) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            return;
-        }
-        View barra = actividad.findViewById(R.id.barraSuperior);
-        View contenido = actividad.findViewById(R.id.contenido);
-        View raiz = (View) barra.getParent();
+    static void barraSuperior(View barra) {
         int arribaBase = barra.getPaddingTop();
-        int abajoBase = contenido.getPaddingBottom();
-
-        raiz.setOnApplyWindowInsetsListener((vista, bordes) -> {
-            Insets barras = bordes.getInsets(WindowInsets.Type.systemBars());
-            Insets teclado = bordes.getInsets(WindowInsets.Type.ime());
-            barra.setPadding(barra.getPaddingLeft(), arribaBase + barras.top,
-                    barra.getPaddingRight(), barra.getPaddingBottom());
-            contenido.setPadding(contenido.getPaddingLeft(), contenido.getPaddingTop(),
-                    contenido.getPaddingRight(), abajoBase + Math.max(barras.bottom, teclado.bottom));
-            return WindowInsets.CONSUMED;
+        ViewCompat.setOnApplyWindowInsetsListener(barra, (vista, bordes) -> {
+            Insets sistema = bordes.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            vista.setPadding(vista.getPaddingLeft(), arribaBase + sistema.top,
+                    vista.getPaddingRight(), vista.getPaddingBottom());
+            return bordes;
         });
+        ViewCompat.requestApplyInsets(barra);
+    }
+
+    static void contenidoInferior(View contenido) {
+        int abajoBase = contenido.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(contenido, (vista, bordes) -> {
+            Insets navegacion = bordes.getInsets(WindowInsetsCompat.Type.navigationBars());
+            Insets teclado = bordes.getInsets(WindowInsetsCompat.Type.ime());
+            vista.setPadding(vista.getPaddingLeft(), vista.getPaddingTop(), vista.getPaddingRight(),
+                    abajoBase + Math.max(navegacion.bottom, teclado.bottom));
+            return bordes;
+        });
+        ViewCompat.requestApplyInsets(contenido);
     }
 }
