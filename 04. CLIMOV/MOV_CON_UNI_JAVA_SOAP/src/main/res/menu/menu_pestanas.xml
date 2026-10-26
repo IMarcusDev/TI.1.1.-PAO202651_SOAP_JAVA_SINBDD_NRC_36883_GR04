@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/pestana_conversion"
+        android:icon="@drawable/tab_conversion"
+        android:title="@string/pestana_conversion" />
+    <item
+        android:id="@+id/pestana_catalogo"
+        android:icon="@drawable/tab_catalogo"
+        android:title="@string/pestana_catalogo" />
+</menu>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="monster_primary">#344C74</color>
+    <color name="fondo_app">#F3F4F6</color>
+    <color name="texto_oscuro">#1F2937</color>
+    <color name="borde_campo">#8A8F98</color>
+    <color name="borde_tarjeta">#E2E5EA</color>
+    <color name="campo_sobre_primario">#52658A</color>
+    <color name="texto_sobre_primario">#D5DCE8</color>
+    <color name="texto_error">#C62828</color>
+    <color name="blanco">#FFFFFF</color>
+    <color name="fondo_hoja">#73000000</color>
+</resources>

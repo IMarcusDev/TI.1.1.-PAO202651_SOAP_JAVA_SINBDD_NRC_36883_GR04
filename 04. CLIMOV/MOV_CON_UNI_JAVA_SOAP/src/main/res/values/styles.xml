@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BarraSuperior" parent="Widget.Material3.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:background">@color/monster_primary</item>
+        <item name="titleTextColor">@color/blanco</item>
+        <item name="android:theme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
+    </style>
+
+    <style name="Tarjeta" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/blanco</item>
+        <item name="strokeColor">@color/borde_tarjeta</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="CampoEtiqueta">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/texto_oscuro</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="CampoTexto">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:background">@drawable/campo_fondo</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/texto_oscuro</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="BotonPrimario" parent="Widget.Material3.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="backgroundTint">@color/monster_primary</item>
+        <item name="android:textColor">@color/blanco</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="TextoError">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/texto_error</item>
+        <item name="android:accessibilityLiveRegion">polite</item>
+    </style>
+
+    <style name="ChipMagnitud" parent="Widget.Material3.Chip.Filter">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/chip_texto</item>
+        <item name="chipBackgroundColor">@color/chip_fondo</item>
+        <item name="chipStrokeColor">@color/chip_borde</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipCornerRadius">24dp</item>
+        <item name="chipMinHeight">48dp</item>
+        <item name="chipStartPadding">14dp</item>
+        <item name="chipEndPadding">14dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipIconVisible">false</item>
+        <item name="rippleColor">@color/borde_tarjeta</item>
+    </style>
+
+    <style name="Selector">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+</resources>
