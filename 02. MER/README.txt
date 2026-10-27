@@ -1,29 +1,22 @@
 ══════════════════════════════════════
       ARQUITECTURA DE SOFTWARE
- DOCUMENTACIÓN – EP2.1. APLICACIÓN PROYECTO MASHUPs EN LA NUBE
+ DOCUMENTACIÓN – MODELO ENTIDAD-RELACIÓN (MER) – NO APLICA
 ══════════════════════════════════════
 
 Buen día, Ingeniero.
 
-Por medio del presente, adjuntamos el enlace correspondiente a la documentación de 
+Dado que el presente proyecto no utiliza ninguna lógica de persistencia de datos, no existe BDD y por lo tanto no hay Diagrama Modelo Entidad-Relación.
 
-EP2.1. APLICACIÓN PROYECTO MASHUPs EN LA NUBE de la asignatura de Arquitectura de Software.
-
-🔗 Enlace:
-https://drive.google.com/drive/folders/1EvQUnfHNwz2b02-i8r-oX_UMu31EpLS5?usp=drive_link
-
-Grupo 2
+Grupo 4
 ────────────────────────────
-• Pullaguari Axel
-• Jaya Carlos
-• Chipe Pamela
+• Escobar Marcos
+• Sosa Mateo	
+• Ñato Carlos
 ────────────────────────────
-
-Agradecemos su tiempo y revisión del trabajo presentado. Quedamos atentos a cualquier observación o comentario adicional.
 
 Atentamente,
 
-Grupo 2
+Grupo 4
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡾⡛⠷⣂⣄⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⠟⢀⣼⣿⡿⠿⢷⡿⠓⠿⣖⣤⣤⣤⢄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣦⡸⣤⣀⣀⣀⡾⢥⡀⠀⠙⡿⣽⢿⣌⠉⢻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
