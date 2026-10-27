@@ -2,8 +2,10 @@ package ec.edu.monster;
 
 import ec.edu.monster.controlador.CatalogoControlador;
 import ec.edu.monster.controlador.ConversionControlador;
+import ec.edu.monster.controlador.EstadoControlador;
 import ec.edu.monster.controlador.LoginControlador;
 import ec.edu.monster.modelo.ConversorServicio;
+import ec.edu.monster.modelo.EstadoServidor;
 import ec.edu.monster.modelo.Sesion;
 import ec.edu.monster.vista.LoginFrame;
 import ec.edu.monster.vista.PrincipalFrame;
@@ -20,6 +22,7 @@ public final class App {
     private static final String SIN_CONEXION = "No se pudo conectar con el servidor";
 
     private final ConversorServicio servicio;
+    private final EstadoServidor estado = new EstadoServidor();
 
     private App(ConversorServicio servicio) {
         this.servicio = servicio;
@@ -46,6 +49,7 @@ public final class App {
     private void mostrarLogin() {
         LoginFrame login = new LoginFrame(this::mostrarPrincipal);
         new LoginControlador(login, servicio);
+        new EstadoControlador(login.getIndicadorEstado(), estado);
         login.setVisible(true);
     }
 
@@ -60,6 +64,7 @@ public final class App {
         });
         new ConversionControlador(principal.getConversionPanel(), servicio);
         new CatalogoControlador(principal.getCatalogoPanel(), servicio);
+        new EstadoControlador(principal.getIndicadorEstado(), estado);
         principal.setVisible(true);
     }
 }

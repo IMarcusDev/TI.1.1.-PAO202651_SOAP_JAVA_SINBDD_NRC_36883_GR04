@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -133,16 +132,9 @@ final class Estilos {
         return nombre.equals(simbolo) ? simbolo : nombre + " (" + simbolo + ")";
     }
 
-    /** Green "dot + text" line used to show that the service is reachable. */
-    static JPanel estadoServicio(String texto) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panel.setOpaque(false);
-        JLabel etiqueta = new JLabel(texto, new Punto(EXITO, 10), JLabel.LEFT);
-        etiqueta.setIconTextGap(8);
-        etiqueta.setFont(FUENTE_PEQUENA);
-        etiqueta.setForeground(EXITO);
-        panel.add(etiqueta);
-        return panel;
+    /** Small round icon used by the server status line. */
+    static Icon punto(Color color) {
+        return new Punto(color, 10);
     }
 
     static JMenuBar barraMenu(JMenu... menus) {

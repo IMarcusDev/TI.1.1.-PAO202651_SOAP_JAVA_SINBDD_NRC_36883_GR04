@@ -23,6 +23,7 @@ public class PrincipalFrame extends JFrame {
     private final CatalogoPanel catalogoPanel = new CatalogoPanel();
     private final CardLayout pantallas = new CardLayout();
     private final JPanel contenido = new JPanel(pantallas);
+    private final IndicadorEstado indicadorEstado = new IndicadorEstado("Sesión activa · ");
 
     public PrincipalFrame(Runnable alCerrarSesion) {
         super(Estilos.TITULO_VENTANA);
@@ -49,13 +50,12 @@ public class PrincipalFrame extends JFrame {
         contenido.add(conversionPanel, CONVERTIR);
         contenido.add(catalogoPanel, CATALOGO);
 
-        JPanel estado = Estilos.estadoServicio("Sesión activa · Servicio disponible");
-        estado.setBorder(BorderFactory.createEmptyBorder(8, 34, 16, 34));
+        indicadorEstado.setBorder(BorderFactory.createEmptyBorder(8, 34, 16, 34));
 
         JPanel raiz = new JPanel(new BorderLayout());
         raiz.setBackground(Estilos.FONDO);
         raiz.add(contenido, BorderLayout.CENTER);
-        raiz.add(estado, BorderLayout.SOUTH);
+        raiz.add(indicadorEstado, BorderLayout.SOUTH);
         setContentPane(raiz);
     }
 
@@ -65,5 +65,9 @@ public class PrincipalFrame extends JFrame {
 
     public CatalogoPanel getCatalogoPanel() {
         return catalogoPanel;
+    }
+
+    public EstadoVista getIndicadorEstado() {
+        return indicadorEstado;
     }
 }

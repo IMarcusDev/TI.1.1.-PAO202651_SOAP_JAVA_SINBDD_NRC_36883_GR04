@@ -27,6 +27,7 @@ public class LoginFrame extends JFrame implements LoginVista {
     private final JTextField campoUsuario = Estilos.entrada(new JTextField());
     private final JPasswordField campoClave = Estilos.entrada(new JPasswordField());
     private final JButton botonIngresar = Estilos.botonPrimario("Ingresar");
+    private final IndicadorEstado indicadorEstado = new IndicadorEstado("");
 
     private Runnable accionIngresar = () -> { };
     // Snapshots taken on the EDT so the controller can read them from a worker thread.
@@ -74,8 +75,7 @@ public class LoginFrame extends JFrame implements LoginVista {
         c.insets = new Insets(0, 0, 0, 0);
         formulario.add(filaBoton, c);
 
-        JPanel estado = Estilos.estadoServicio("Servicio disponible");
-        estado.setBorder(BorderFactory.createEmptyBorder(0, 50, 18, 50));
+        indicadorEstado.setBorder(BorderFactory.createEmptyBorder(0, 50, 18, 50));
 
         JPanel raiz = new JPanel(new BorderLayout());
         raiz.setBackground(Estilos.FONDO);
@@ -84,7 +84,7 @@ public class LoginFrame extends JFrame implements LoginVista {
         JPanel contenedor = new JPanel(new BorderLayout());
         contenedor.setBackground(Estilos.FONDO);
         contenedor.add(raiz, BorderLayout.CENTER);
-        contenedor.add(estado, BorderLayout.SOUTH);
+        contenedor.add(indicadorEstado, BorderLayout.SOUTH);
         return contenedor;
     }
 
@@ -123,5 +123,9 @@ public class LoginFrame extends JFrame implements LoginVista {
     @Override
     public void alIngresar(Runnable accion) {
         this.accionIngresar = accion;
+    }
+
+    public EstadoVista getIndicadorEstado() {
+        return indicadorEstado;
     }
 }
